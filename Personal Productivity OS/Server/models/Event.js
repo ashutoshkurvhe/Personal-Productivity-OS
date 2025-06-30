@@ -6,10 +6,10 @@ const CalendarEventSchema = new mongoose.Schema(
         source: { type: String, enum: ["google", "apple",], required: [true, "Event source is required"], },
         title: { type: String, required: [true, "Event title is required"], trim: true, },
         start: {
-            type: Date, required: [true, "Event start time is required"],
+            type: String, required: [true, "Event start time is required"],
         },
         end: {
-            type: Date, required: [true, "Event end time is required"],
+            type: String, required: [true, "Event end time is required"],
         },
         externalId: {
             type: String,

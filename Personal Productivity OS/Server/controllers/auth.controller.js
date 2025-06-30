@@ -8,7 +8,7 @@ const generateToken = (id) => {
 
 //SignUp User
 exports.registerUser = async (req, res) => {
-    const { fullName, email, password, profileImageUrl } = req.body;
+    const { fullName, email, password} = req.body;
 
     //validate Check for missing fields
     if (!fullName || !email || !password) {
@@ -82,4 +82,35 @@ exports.getUserInfo = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: "Error fetching user info", error: error.message });
     }
+};
+
+exports.updateUserProfile = async (req, res) => {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    user.name = req.body.name || user.fullName;
+    user.email = req.body.email || user.email;
+    user.profileImageUrl = req.body.profileImmageUrl || user.profileImageUrl;
+    if (req.body.password) user.password = req.body.password; //will be hased by pre-save hook
+    
+    const updated = await user.save();
+    res.json(updated);
+};
+
+
+exports.updateTheme = async (req, res) => {
+  const { theme } = req.body;
+  const user = await User.findById(req.user._id);
+  user.theme = theme;
+  await user.save();
+  res.json({ theme: user.theme });
+};
+
+exports.updateSettings = async (req, res) => {
+  const { pomodoro, notifications } = req.body;
+  const user = await User.findById(req.user._id);
+  if (pomodoro) user.settings.pomodoro = pomodoro;
+  if (notifications) user.settings.notifications = notifications;
+  await user.save();
+  res.json(user.settings);
 };

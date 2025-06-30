@@ -1,4 +1,3 @@
-const { response } = require('express');
 const Task = require('../models/Task');
 
 //Add Task 
@@ -26,7 +25,7 @@ exports.addTask = async (req, res) => {
         });
 
         await newTask.save();
-        res.status(201).json(newTask);
+        res.status(200).json(newTask);
     } catch {
         res.status(500).json({ message: 'Server Error' });
     }
@@ -44,6 +43,18 @@ exports.getAllTasks = async (req, res) => {
     }
 };
 
+
+//Update task
+exports.updateTask = async (req, res) => {
+  const task = await Task.findOneAndUpdate(
+    { _id: req.params.id, userId: req.user.id },
+    req.body,
+    { new: true }
+  );
+  res.json(task);
+};
+
+
 //Delete task
 exports.deleteTask = async (req, res) => {
     try {
@@ -54,7 +65,15 @@ exports.deleteTask = async (req, res) => {
     }
 };
 
-//Delete all tasks
-exports.deleteAllTasks = async (req, res) => {};
 
-exports.updateTask = async (req , res) =>{}
+// Reorder task
+exports.reorderTasks = async (req, res) => {
+  const updates = req.body; // [{id, orderIndex}, ...]
+  for (const update of updates) {
+    await Task.updateOne(
+      { _id: update.id, userId: req.user._id },
+      { orderIndex: update.orderIndex }
+    );
+  }
+  res.json({ message: "Tasks reordered" });
+};

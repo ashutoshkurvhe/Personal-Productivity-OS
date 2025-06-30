@@ -5,7 +5,7 @@ const { addProject, deleteProject, getAllProjects } = require("../controllers/pr
 const router = express.Router();
 
 router.post("/addProject", protect, addProject);
-router.get("/getProjects", protect, getAllProjects);
+router.get("/getAllProjects", protect, getAllProjects);
 router.delete("/deleteProject/:id", protect, deleteProject);
 
 module.exports = router;
