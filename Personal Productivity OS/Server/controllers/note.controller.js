@@ -2,7 +2,7 @@ const Note = require("../models/Note");
 
 //Add note
 exports.addNote = async (req, res) => {
-  const userId = req.body.id;
+  const userId = req.user.id;
 
   try {
     const { title, content, tags, projectId, summary } = req.body;
@@ -25,7 +25,7 @@ exports.addNote = async (req, res) => {
     await newNote.save();
     res.status(200).json(newNote);
   } catch (error) {
-    console.status(500).json({ message: "Sever Error" });
+    res.status(500).json({ message: "Sever Error" });
   }
 };
 
@@ -34,8 +34,8 @@ exports.getAllNotes = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const note = await Note.find({ userId }).sort({ date: -1 });
-        res.status(200).json(note);
+        const notes = await Note.find({ userId });
+        res.status(200).json(notes);
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
     }

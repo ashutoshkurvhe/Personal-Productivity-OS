@@ -1,3 +1,4 @@
+const { response } = require('express');
 const Task = require('../models/Task');
 
 //Add Task 
@@ -25,11 +26,10 @@ exports.addTask = async (req, res) => {
         });
 
         await newTask.save();
-        res.status(200).json(newTask);
+        res.status(201).json(newTask);
     } catch {
-        console.status(500).json({ message: 'Server Error' });
+        res.status(500).json({ message: 'Server Error' });
     }
-
 };
 
 //Get all tasks 
@@ -37,8 +37,8 @@ exports.getAllTasks = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const task = await Task.find({ userId }).sort({ date: -1 });
-        res.status(200).json(task);
+        const tasks = await Task.find({ userId }).sort({ date: -1 });
+        res.status(200).json(tasks);
     } catch (error) {
         res.status(500).json({ message: 'Server Error' });
     }
