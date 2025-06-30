@@ -8,7 +8,7 @@ router.post("/", protect, addTask);
 router.get("/", protect, getAllTasks);
 router.put("/:id", protect, updateTask);
 router.delete("/:id", protect, deleteTask);
-router.delete("/recorder", protect, recorderTasks);
+router.post("/recorder", protect, recorderTasks);
 
 
 module.exports = router;
