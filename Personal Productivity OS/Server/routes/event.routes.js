@@ -1,11 +1,13 @@
 const express = require("express");
 const { protect } = require("../middleware/authMiddleware");
-const { addEvent, getAllEvents, deleteEvent } = require("../controllers/event.controller");
+const {
+  importICal,
+  getCalendarEvents,
+} = require("../controllers/event.controller");
 
 const router = express.Router();
 
-router.post("/addEvent", protect, addEvent);
-router.get("/getAllEvents", protect, getAllEvents);
-router.delete("/deleteEvent/:id", protect, deleteEvent);
+router.post("/import", protect, importICal);
+router.get("/event", protect, getCalendarEvents);
 
 module.exports = router;

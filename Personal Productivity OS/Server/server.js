@@ -17,7 +17,7 @@ app.use("/api/v2/auth", authRoutes);
 app.use("/api/v2/task", taskRoutes);
 app.use("/api/v2/note", noteRoutes);
 app.use("/api/v2/project", projectRoutes);
-app.use("/api/v2/event", eventRoutes);
+// app.use("/api/v2/event", eventRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

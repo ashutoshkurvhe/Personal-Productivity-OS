@@ -67,7 +67,7 @@ exports.deleteTask = async (req, res) => {
 
 
 // Reorder task
-exports.reorderTasks = async (req, res) => {
+exports.recorderTasks = async (req, res) => {
   const updates = req.body; // [{id, orderIndex}, ...]
   for (const update of updates) {
     await Task.updateOne(
