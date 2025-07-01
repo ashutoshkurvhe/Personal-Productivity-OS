@@ -1,17 +1,23 @@
+const PomodoroSession = require("../models/PomodoroSession");
+
 exports.savePomodoroSession = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const { duration, completedAt } = req.body; // e.g., duration in minutes, completed timestamp
+    const userId = req.user.id; 
+    const { duration, completedAt } = req.body;
 
     if (!duration) {
       return res.status(400).json({ message: "Duration is required" });
     }
 
-    // In the future: await PomodoroSession.create({ userId, duration, completedAt });
+    const session = await PomodoroSession.create({
+      userId,
+      duration,
+      completedAt: completedAt || new Date(), 
+    });
 
-    console.log(`User ${userId} completed a pomodoro:`, req.body);
+    console.log(`User ${userId} completed a pomodoro:`, session);
 
-    res.json({ message: "Pomodoro session saved" });
+    res.json({ message: "Pomodoro session saved", session });
   } catch (error) {
     console.error("Save Pomodoro Error:", error.message);
     res
@@ -35,4 +41,3 @@ exports.getPomodoroStats = async (req, res) => {
       .json({ message: "Server error while retrieving pomodoro stats" });
   }
 };
-
