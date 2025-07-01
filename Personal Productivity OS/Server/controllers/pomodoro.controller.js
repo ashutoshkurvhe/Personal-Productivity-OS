@@ -1,4 +1,4 @@
-const savePomodoroSession = async (req, res) => {
+exports.savePomodoroSession = async (req, res) => {
   try {
     const userId = req.user._id;
     const { duration, completedAt } = req.body; // e.g., duration in minutes, completed timestamp
@@ -20,7 +20,7 @@ const savePomodoroSession = async (req, res) => {
   }
 };
 
-const getPomodoroStats = async (req, res) => {
+exports.getPomodoroStats = async (req, res) => {
   try {
     // In the future: query PomodoroSession collection for real stats
 
@@ -36,4 +36,3 @@ const getPomodoroStats = async (req, res) => {
   }
 };
 
-module.exports = { savePomodoroSession, getPomodoroStats };

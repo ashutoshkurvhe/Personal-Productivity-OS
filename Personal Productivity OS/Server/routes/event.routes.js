@@ -8,6 +8,6 @@ const {
 const router = express.Router();
 
 router.post("/import", protect, importICal);
-router.get("/event", protect, getCalendarEvents);
+router.get("/", protect, getCalendarEvents);
 
 module.exports = router;
