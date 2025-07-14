@@ -6,7 +6,7 @@ import { validateEmail } from "../../utils/helper";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import { useContext } from "react";
-import { UserContext } from "../../context/userContext";
+import { UserContext } from "../../context/UserContext";
 
 
 const Login = () => {
@@ -46,7 +46,7 @@ const Login = () => {
             if (token) {
                 localStorage.setItem("token", token);
                 updateUser(user); // Update user context with the logged-in user data
-                navigate("/register");
+                navigate("/dashboard");
             }       
         } catch (error) {
             if(error.response && error.response.data.message) {

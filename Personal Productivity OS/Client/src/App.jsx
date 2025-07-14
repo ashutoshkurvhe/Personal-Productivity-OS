@@ -7,7 +7,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import UserProvider from "./context/userContext";
+import UserProvider from "./context/UserContext";
 import "./App.css";
 import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
@@ -30,16 +30,16 @@ function App() {
       <div>
         <Router>
           <Routes>
-            {/* <Route path="/" element={<Root/>} /> */}
+            <Route path="/" element={<Root/>} />
             <Route path="/login" element={<Login/>} />
             <Route path="/register" element={<SignUp/>} />
-            {/* <Route path="/dashboard" element={<Home/>} /> */}
-            {/* <Route path="/note" element={<Note/>} /> */}
-            {/* <Route path="/task" element={<Task/>} /> */}
-            {/* <Route path="/project" element={<Project/>} /> */}
-            {/* <Route path="/pomodoro" element={<Pomodoro/>} /> */}
-            {/* <Route path="/event" element={<CalendarEvent/>} /> */}
-            {/* <Route path="*" element={<Navigate to="/" />} /> */}
+            <Route path="/dashboard" element={<Home/>} />
+            <Route path="/notes" element={<Note/>} />
+            <Route path="/tasks" element={<Task/>} />
+            <Route path="/projects" element={<Project/>} />
+            <Route path="/pomodoro" element={<Pomodoro/>} />
+            <Route path="/events" element={<CalendarEvent/>} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </Router>
       </div>
@@ -50,14 +50,14 @@ function App() {
 export default App;
 
 
-// const Root = () => {
-//   //Check if token exists in localstorage
-//   const isAuthenticates = !!localStorage.getItem("token");
+const Root = () => {
+  //Check if token exists in localstorage
+  const isAuthenticates = !!localStorage.getItem("token");
 
-//   //Redirect to dashboard if authenticated, otherwise to login
-//   return isAuthenticates ? (
-//     <Navigate to="/dashboard" />
-//   ) : (
-//     <Navigate to="/login" />
-//   );
-// };
+  //Redirect to dashboard if authenticated, otherwise to login
+  return isAuthenticates ? (
+    <Navigate to="/dashboard" />
+  ) : (
+    <Navigate to="/login" />
+  );
+};
