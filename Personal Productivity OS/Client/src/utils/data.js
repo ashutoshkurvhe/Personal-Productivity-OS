@@ -11,7 +11,7 @@ export const SIDE_MENU_DATA = [
         id: "01",
         label: "Dashboard",
         icon: RxDashboard,
-        path: "/income",
+        path: "/dashboard",
     },
     {
         id: "02",
@@ -35,10 +35,11 @@ export const SIDE_MENU_DATA = [
         id: "05",
         label: "Projects",
         icon: GoProjectSymlink,
+        path: "/projects",
     },
     {
         id: "06",
-        label: "Timer",
+        label: "Pomodoro",
         icon: SiStagetimer,
         path: "/pomodoro",
     },

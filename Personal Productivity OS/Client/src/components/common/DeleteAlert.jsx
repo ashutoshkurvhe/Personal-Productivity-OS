@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Model = () => {
+const DeleteAlert = () => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const Model = () => {
   )
 }
 
-export default Model
+export default DeleteAlert

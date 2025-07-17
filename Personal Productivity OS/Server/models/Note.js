@@ -12,13 +12,18 @@ const NoteSchema = new mongoose.Schema(
       required: [true, "Note title is required"],
       trim: true,
     },
+    type: {
+      type: String,
+      enum: ["pined", "favourite", "archived", "normal"],
+      default: "normal",
+    },
     content: {
       type: String,
       required: [true, "Note content is required"],
       trim: true,
     },
     tags: { type: String, trim: true },
-    projectId: { type: mongoose.Schema.Types.ObjectId, ref: "Project" },
+    // projectId: { type: mongoose.Schema.Types.ObjectId, ref: "Project" },
     summary: {
       type: String,
       trim: true,

@@ -10,5 +10,4 @@ router.put("/:id", protect, updateTask);
 router.delete("/:id", protect, deleteTask);
 router.post("/reorder", protect, reorderTasks);
 
-
 module.exports = router;

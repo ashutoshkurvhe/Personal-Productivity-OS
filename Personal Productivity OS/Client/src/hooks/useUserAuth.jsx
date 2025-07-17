@@ -5,7 +5,7 @@ import axiosInstance from "../utils/axiosInstance";
 import { API_PATHS } from "../utils/apiPaths";
 
 export const useUserAuth = () => {
-    const { user, updateUser, clearuser } = useContext(UserContext);
+    const { user, updateUser, clearUser } = useContext(UserContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export const useUserAuth = () => {
             } catch (error) {
                 console.error("Failed to fetch user info:", error);
                 if (isMounted) {
-                    clearuser();
+                    clearUser();
                     navigate("/login");
                 }
             }
@@ -34,6 +34,6 @@ export const useUserAuth = () => {
         return () => {
             isMounted = false;
         };
-    }, [updateUser, clearuser, navigate]);
+    }, [updateUser, clearUser, navigate]);
 };
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Model = () => {
+const NoteBadge = ({icon, color}) => {
   return (
     <div>
       
@@ -8,4 +8,4 @@ const Model = () => {
   )
 }
 
-export default Model
+export default NoteBadge
