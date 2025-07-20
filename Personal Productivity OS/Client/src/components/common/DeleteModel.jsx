@@ -1,17 +1,18 @@
 import React from "react";
 
-const Model = ({ children, isOpen, onClose, title }) => {
+const DeleteModel = ({ children, isOpen, onClose, title }) => {
   if (!isOpen) return null;
   return (
-    <div className="top-0 right-0 left-0 z-50 flex flex-col justify-center items-center w-full h-full overflow-y-auto overflow-x-hidden bg-opacity-50">
+    <div className="fixed top-0 right-0 z-50 flex flex-col justify-center items-center w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden bg-opacity-50 bg-gray-200/50 backdrop-blur-sm">
       {/*Model content */}
-      <div className="relative p-4 w-full h-full">
+      <div className="relative w-[500px] min-w-[300px] max-h-[250px]">
         <div className="relative bg-white rounded-lg shadow-sm">
           {/*Model header */}
-          <div className="flex items-center justify-end p-4 md:p-5">
+          <div className="flex items-center justify-between p-4 md:p-5">
+            <h1 className="text-2xl">{title}</h1>
             <button
               type="button"
-              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-400 dark:hover:text-white cursor-pointer absolute right-0 top-0"
+              className="text-gray-900 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-400 dark:hover:text-white cursor-pointer absolute right-0 top-0"
               onClick={onClose}
             >
               <svg
@@ -39,4 +40,4 @@ const Model = ({ children, isOpen, onClose, title }) => {
   );
 };
 
-export default Model;
+export default DeleteModel;

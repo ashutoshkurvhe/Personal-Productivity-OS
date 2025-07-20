@@ -1,266 +1,218 @@
-import React, { useState } from "react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import React from "react";
 import {
-  FaFlag,
-  FaPlus,
-  FaTrash,
-  FaEdit,
-  FaSave,
-  FaTimes,
-} from "react-icons/fa";
-import { formatDistanceToNow } from "date-fns";
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import { createPortal } from "react-dom";
+import { useState } from "react";
+import KanbanColumn from "./KanbanColumn";
+import TaskCard from "./TaskCard";
+import { Plus } from "lucide-react";
 
-const getPriorityBadge = (priority) => {
-  const base =
-    "inline-flex items-center px-2 py-1 text-xs font-medium rounded-full";
-  switch (priority) {
-    case "high":
-      return (
-        <span className={`${base} bg-red-100 text-red-700`}>
-          <FaFlag className="mr-1" /> High
-        </span>
-      );
-    case "medium":
-      return (
-        <span className={`${base} bg-yellow-100 text-yellow-700`}>
-          <FaFlag className="mr-1" /> Medium
-        </span>
-      );
-    case "low":
-    default:
-      return (
-        <span className={`${base} bg-green-100 text-green-700`}>
-          <FaFlag className="mr-1" /> Low
-        </span>
-      );
-  }
-};
+const COLUMNS = [
+  {
+    id: "todo",
+    title: "To Do",
+    color: "bg-slate-100 border-slate-200",
+    headerColor: "text-slate-700",
+    count: 0,
+  },
+  {
+    id: "in-progress",
+    title: "In Progress",
+    color: "bg-blue-50 border-blue-200",
+    headerColor: "text-blue-700",
+    count: 0,
+  },
+  {
+    id: "review",
+    title: "Review",
+    color: "bg-yellow-50 border-yellow-200",
+    headerColor: "text-yellow-700",
+    count: 0,
+  },
+  {
+    id: "done",
+    title: "Done",
+    color: "bg-green-50 border-green-200",
+    headerColor: "text-green-700",
+    count: 0,
+  },
+];
 
-const KanbanBoard = () => {
-  const [columns, setColumns] = useState({
-    pending: {
-      name: "📝 Pending",
-      items: [],
-    },
-    inProgress: {
-      name: "🚧 In Progress",
-      items: [],
-    },
-    completed: {
-      name: "✅ Completed",
-      items: [],
-    },
-  });
+const KanbanBoard = ({
+  tasks,
+  onDelete,
+  onEdit,
+  openAddTaskModel,
+  onReorder,
+}) => {
+  const [activeId, setActiveId] = useState(null);
+  const [columns, setColumns] = useState(COLUMNS);
 
-  const [editingId, setEditingId] = useState(null);
-  const [editedTask, setEditedTask] = useState({});
-
-  const createTask = (columnId) => {
-    const newTask = {
-      id: Date.now().toString(),
-      title: "New Task",
-      description: "Task description here...",
-      priority: "low",
-      createdAt: new Date(),
-    };
-    setColumns((prev) => ({
-      ...prev,
-      [columnId]: {
-        ...prev[columnId],
-        items: [...prev[columnId].items, newTask],
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
       },
-    }));
+    })
+  );
+
+  // Group tasks by status
+  const getTasksByStatus = (status) => {
+    return tasks
+      .filter((task) => task.taskStatus === status)
+      .sort((a, b) => a.orderIndex - b.orderIndex);
   };
 
-  const deleteTask = (columnId, taskId) => {
-    setColumns((prev) => ({
-      ...prev,
-      [columnId]: {
-        ...prev[columnId],
-        items: prev[columnId].items.filter((task) => task.id !== taskId),
-      },
-    }));
+  // Update column counts
+  const columnsWithCounts = columns.map((column) => ({
+    ...column,
+    count: getTasksByStatus(column.id).length,
+  }));
+
+  const findTaskById = (id) => {
+    return tasks.find((task) => task._id === id);
   };
 
-  const startEditing = (task) => {
-    setEditingId(task.id);
-    setEditedTask({ ...task });
+  const handleDragStart = (event) => {
+    setActiveId(event.active.id);
   };
 
-  const saveTask = (columnId, taskId) => {
-    setColumns((prev) => ({
-      ...prev,
-      [columnId]: {
-        ...prev[columnId],
-        items: prev[columnId].items.map((t) =>
-          t.id === taskId ? editedTask : t
-        ),
-      },
-    }));
-    setEditingId(null);
-  };
+  const handleDragOver = (event) => {
+    const { active, over } = event;
 
-  const onDragEnd = (result) => {
-    const { source, destination } = result;
-    if (!destination) return;
+    if (!over) return;
 
-    const sourceCol = columns[source.droppableId];
-    const destCol = columns[destination.droppableId];
-    const sourceItems = [...sourceCol.items];
-    const [movedItem] = sourceItems.splice(source.index, 1);
+    const activeId = active.id;
+    const overId = over.id;
 
-    if (source.droppableId === destination.droppableId) {
-      sourceItems.splice(destination.index, 0, movedItem);
-      setColumns({
-        ...columns,
-        [source.droppableId]: { ...sourceCol, items: sourceItems },
-      });
-    } else {
-      const destItems = [...destCol.items];
-      destItems.splice(destination.index, 0, movedItem);
-      setColumns({
-        ...columns,
-        [source.droppableId]: { ...sourceCol, items: sourceItems },
-        [destination.droppableId]: { ...destCol, items: destItems },
-      });
+    // Find the active task
+    const activeTask = findTaskById(activeId);
+    if (!activeTask) return;
+
+    // Determine if we're hovering over a column or a task
+    const isOverAColumn = columns.some((column) => column.id === overId);
+    const isOverATask = tasks.some((task) => task._id === overId);
+
+    if (isOverAColumn) {
+      // Moving to a different column
+      if (activeTask.taskStatus !== overId) {
+        const updatedTask = {
+          ...activeTask,
+          taskStatus: overId,
+          orderIndex: getTasksByStatus(overId).length,
+        };
+
+        onReorder([updatedTask]);
+      }
+    } else if (isOverATask) {
+      // Moving within the same column or to a different position
+      const overTask = findTaskById(overId);
+      if (!overTask) return;
+
+      if (activeTask.taskStatus !== overTask.taskStatus) {
+        // Moving to a different column
+        const updatedTask = {
+          ...activeTask,
+          taskStatus: overTask.taskStatus,
+          orderIndex: overTask.orderIndex,
+        };
+
+        onReorder([updatedTask]);
+      } else {
+        // Reordering within the same column
+        const columnTasks = getTasksByStatus(activeTask.taskStatus);
+        const oldIndex = columnTasks.findIndex((task) => task._id === activeId);
+        const newIndex = columnTasks.findIndex((task) => task._id === overId);
+
+        if (oldIndex !== newIndex) {
+          const reorderedTasks = arrayMove(columnTasks, oldIndex, newIndex);
+          const updatedTasks = reorderedTasks.map((task, index) => ({
+            ...task,
+            orderIndex: index,
+          }));
+
+          onReorder(updatedTasks);
+        }
+      }
     }
   };
 
-  return (
-    <div className="p-6 min-h-screen bg-gradient-to-r from-gray-100 to-blue-100">
-      <h1 className="text-4xl font-bold text-center mb-8">📌 Kanban Board</h1>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex flex-col md:flex-row gap-6 justify-center">
-          {Object.entries(columns).map(([colId, col]) => (
-            <Droppable key={colId} droppableId={colId}>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className={`w-full md:w-1/3 bg-white rounded-xl p-4 shadow-lg transition ${
-                    snapshot.isDraggingOver ? "bg-blue-50" : ""
-                  }`}
-                >
-                  <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold">{col.name}</h2>
-                    <button
-                      onClick={() => createTask(colId)}
-                      className="text-blue-600 hover:text-blue-800 flex items-center text-sm"
-                    >
-                      <FaPlus className="mr-1" /> Create Task
-                    </button>
-                  </div>
+  const handleDragEnd = (event) => {
+    setActiveId(null);
+  };
 
-                  {col.items.map((task, index) => (
-                    <Draggable
-                      key={task.id}
-                      draggableId={task.id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          className={`mb-3 p-4 rounded-lg border bg-white shadow-sm transition-all space-y-2 ${
-                            snapshot.isDragging ? "bg-gray-100" : ""
-                          }`}
-                        >
-                          {editingId === task.id ? (
-                            <>
-                              <input
-                                className="w-full text-md font-bold border p-1 rounded"
-                                value={editedTask.title}
-                                onChange={(e) =>
-                                  setEditedTask({
-                                    ...editedTask,
-                                    title: e.target.value,
-                                  })
-                                }
-                              />
-                              <textarea
-                                className="w-full text-sm border p-1 rounded"
-                                value={editedTask.description}
-                                onChange={(e) =>
-                                  setEditedTask({
-                                    ...editedTask,
-                                    description: e.target.value,
-                                  })
-                                }
-                              />
-                              <select
-                                className="w-full text-sm border p-1 rounded"
-                                value={editedTask.priority}
-                                onChange={(e) =>
-                                  setEditedTask({
-                                    ...editedTask,
-                                    priority: e.target.value,
-                                  })
-                                }
-                              >
-                                <option value="low">Low</option>
-                                <option value="medium">Medium</option>
-                                <option value="high">High</option>
-                              </select>
-                              <div className="flex justify-between items-center">
-                                <button
-                                  className="text-green-600 flex items-center gap-1 text-sm"
-                                  onClick={() => saveTask(colId, task.id)}
-                                >
-                                  <FaSave /> Save
-                                </button>
-                                <button
-                                  className="text-gray-600 flex items-center gap-1 text-sm"
-                                  onClick={() => setEditingId(null)}
-                                >
-                                  <FaTimes /> Cancel
-                                </button>
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              <h3 className="text-md font-bold text-gray-800">
-                                {task.title}
-                              </h3>
-                              <p className="text-sm text-gray-600">
-                                {task.description}
-                              </p>
-                              <div className="flex justify-between items-center text-xs">
-                                {getPriorityBadge(task.priority)}
-                                <span className="text-gray-500">
-                                  {formatDistanceToNow(
-                                    new Date(task.createdAt),
-                                    { addSuffix: true }
-                                  )}
-                                </span>
-                              </div>
-                              <div className="flex justify-end gap-3 text-sm pt-2">
-                                <button
-                                  className="text-blue-500 hover:text-blue-700 flex items-center gap-1"
-                                  onClick={() => startEditing(task)}
-                                >
-                                  <FaEdit /> Edit
-                                </button>
-                                <button
-                                  className="text-red-500 hover:text-red-700 flex items-center gap-1"
-                                  onClick={() => deleteTask(colId, task.id)}
-                                >
-                                  <FaTrash /> Delete
-                                </button>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          ))}
+  const activeTask = activeId ? findTaskById(activeId) : null;
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center space-x-4">
+          <h2 className="text-xl font-semibold text-gray-800">Task Board</h2>
+          <div className="flex items-center space-x-2 text-sm text-gray-600">
+            <span className="bg-gray-100 px-2 py-1 rounded-full">
+              {tasks.length} Total Tasks
+            </span>
+          </div>
         </div>
-      </DragDropContext>
+        <button
+          onClick={() => openAddTaskModel()}
+          className="flex items-center space-x-2 add-btn hover:bg-red-900 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+        >
+          <Plus size={16} />
+          <span>Add Task</span>
+        </button>
+      </div>
+
+      {/* Kanban Board */}
+      <div className="flex-1 overflow-hidden">
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-full">
+            {columnsWithCounts.map((column) => (
+              <SortableContext
+                key={column.id}
+                items={getTasksByStatus(column.id).map((task) => task._id)}
+              >
+                <KanbanColumn
+                  column={column}
+                  tasks={getTasksByStatus(column.id)}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onAddTask={() => openAddTaskModel(column.id)}
+                />
+              </SortableContext>
+            ))}
+          </div>
+
+          {/* Drag Overlay */}
+          {createPortal(
+            <DragOverlay>
+              {activeTask ? (
+                <div className="rotate-3 opacity-95">
+                  <TaskCard
+                    task={activeTask}
+                    onEdit={() => {}}
+                    onDelete={() => {}}
+                    isDragging={true}
+                  />
+                </div>
+              ) : null}
+            </DragOverlay>,
+            document.body
+          )}
+        </DndContext>
+      </div>
     </div>
   );
 };

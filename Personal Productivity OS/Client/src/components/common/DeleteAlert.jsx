@@ -1,11 +1,28 @@
-import React from 'react'
+import React from "react";
 
-const DeleteAlert = () => {
+const DeleteAlert = ({ content, onDelete, onCancel }) => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <div className="flex flex-col justify-center items-center">
+      <p className="text-sm">{content}</p>
 
-export default DeleteAlert
+      <div className="flex justify-end gap-3 mt-6">
+        <button
+          type="button"
+          className="delete-btn"
+          onClick={onDelete}
+        >
+          Delete
+        </button>
+        <button
+          type="button"
+          className="cancel-btn"
+          onClick={onCancel}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default DeleteAlert;

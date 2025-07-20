@@ -1,24 +1,226 @@
 import DashboardLayout from "../../components/layout/DashboardLayout";
-import RoutesHeader from "../../components/common/RoutesHeader";
-import RoutesName from "../../components/common/RoutesName";
-import CustomeButton from "../../components/common/CustomButton";
-import { GoPlus } from "react-icons/go";
-import { useUserAuth } from "../../hooks/useUserAuth";
-import ContentLayout from "../../components/layout/ContentLayout";
+import { useState, useEffect } from "react";
 import KanbanBoard from "../../components/Tasks/KanbanBoard";
+import AddTasksForm from "../../components/Tasks/AddTasksForm";
+import Model from "../../components/common/Model";
+import DeleteModel from "../../components/common/DeleteModel";
+import DeleteAlert from "../../components/common/DeleteAlert";
+import { useUserAuth } from "../../hooks/useUserAuth";
+
+// Mock data and functions for demonstration
+const mockTasks = [
+  {
+    _id: "1",
+    title: "Design new landing page",
+    description:
+      "Create a modern and responsive landing page for the new product launch",
+    dueDate: "2024-01-20",
+    priority: "high",
+    taskStatus: "todo",
+    orderIndex: 0,
+  },
+  {
+    _id: "2",
+    title: "Implement user authentication",
+    description:
+      "Set up JWT-based authentication system with proper security measures",
+    dueDate: "2024-01-18",
+    priority: "high",
+    taskStatus: "in-progress",
+    orderIndex: 0,
+  },
+  {
+    _id: "3",
+    title: "Write API documentation",
+    description: "Document all REST API endpoints with examples and schemas",
+    dueDate: "2024-01-25",
+    priority: "medium",
+    taskStatus: "review",
+    orderIndex: 0,
+  },
+  {
+    _id: "4",
+    title: "Setup CI/CD pipeline",
+    description: "Configure automated testing and deployment workflows",
+    dueDate: "2024-01-15",
+    priority: "low",
+    taskStatus: "done",
+    orderIndex: 0,
+  },
+];
 
 const Task = () => {
-  useUserAuth();
+  useUserAuth()
+  const [tasksData, setTasksData] = useState(mockTasks);
+  const [loading, setLoading] = useState(false);
+  const [openAddTasksModel, setOpenAddTasksModel] = useState(false);
+  const [openDeleteAlert, setOpenDeleteAlert] = useState({
+    show: false,
+    data: null,
+  });
+  const [openEditTasksModel, setOpenEditTasksModel] = useState({
+    show: false,
+    data: null,
+  });
+
+  const fetchAllTasks = async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      // In real app, this would be an API call
+      console.log("Tasks fetched");
+    } catch (error) {
+      console.error("Something went wrong. Please try again.", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddTask = async (task) => {
+    const { title, description, dueDate, priority, taskStatus, orderIndex } =
+      task;
+
+    if (!title || !description || !title.trim() || !description.trim()) {
+      alert("All fields must be filled.");
+      return;
+    }
+
+    try {
+      // Simulate API call
+      const newTask = {
+        _id: Date.now().toString(),
+        title,
+        description,
+        dueDate,
+        priority,
+        taskStatus,
+        orderIndex,
+      };
+
+      setTasksData((prev) => [...prev, newTask]);
+      setOpenAddTasksModel(false);
+      alert("Task added successfully.");
+    } catch (error) {
+      console.error("Error adding task:", error);
+      alert("Something went wrong while adding the task.");
+    }
+  };
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      // Simulate API call
+      setTasksData((prev) => prev.filter((task) => task._id !== taskId));
+      setOpenDeleteAlert({ show: false, data: null });
+      alert("Task deleted successfully.");
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
+  const handleUpdateTask = async (taskId, updatedTask) => {
+    try {
+      // Simulate API call
+      setTasksData((prev) =>
+        prev.map((task) =>
+          task._id === taskId ? { ...task, ...updatedTask } : task
+        )
+      );
+      setOpenEditTasksModel({ show: false, data: null });
+      alert("Task updated successfully.");
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  };
+
+  const handleReorderTask = async (reorderedTasks) => {
+    try {
+      // Simulate API call
+      if (Array.isArray(reorderedTasks)) {
+        // Handle multiple tasks reordering
+        const updatedTasks = [...tasksData];
+        reorderedTasks.forEach((updatedTask) => {
+          const index = updatedTasks.findIndex(
+            (task) => task._id === updatedTask._id
+          );
+          if (index !== -1) {
+            updatedTasks[index] = { ...updatedTasks[index], ...updatedTask };
+          }
+        });
+        setTasksData(updatedTasks);
+      } else {
+        // Handle single task update
+        setTasksData((prev) =>
+          prev.map((task) =>
+            task._id === reorderedTasks._id
+              ? { ...task, ...reorderedTasks }
+              : task
+          )
+        );
+      }
+
+      console.log("Tasks reordered successfully.");
+    } catch (error) {
+      console.error("Error reordering task:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllTasks();
+  }, []);
+
   return (
     <DashboardLayout>
-      <RoutesHeader>
-        <RoutesName name="Tasks" />
-        <CustomeButton styles="add-btn" icon={<GoPlus className="text-xl"/>} name="Add Task" />
-      </RoutesHeader>
-      <ContentLayout>
-        {/* Task content will go here */}   
-        <KanbanBoard />
-      </ContentLayout>
+      <div className="px-4 py-6">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">Tasks</h1>
+        </div>
+
+        {openAddTasksModel ? (
+          <Model
+            isOpen={openAddTasksModel}
+            onClose={() => setOpenAddTasksModel(false)}
+            title="Add Task"
+            size="lg"
+          >
+            <AddTasksForm onAddTask={handleAddTask} />
+          </Model>
+        ) : openEditTasksModel.show ? (
+          <Model
+            isOpen={openEditTasksModel.show}
+            onClose={() => setOpenEditTasksModel({ show: false, data: null })}
+            title="Edit Task"
+            size="lg"
+          >
+            <AddTasksForm
+              initialData={openEditTasksModel.data}
+              onUpdateTask={(updatedTask) =>
+                handleUpdateTask(openEditTasksModel.data._id, updatedTask)
+              }
+            />
+          </Model>
+        ) : (
+          <KanbanBoard
+            tasks={tasksData}
+            onDelete={(id) => setOpenDeleteAlert({ show: true, data: id })}
+            onEdit={(task) => setOpenEditTasksModel({ show: true, data: task })}
+            openAddTaskModel={(status) => setOpenAddTasksModel(true)}
+            onReorder={handleReorderTask}
+          />
+        )}
+      </div>
+      <DeleteModel
+        isOpen={openDeleteAlert.show}
+        onClose={() => setOpenDeleteAlert({ show: false, data: null })}
+        title="Delete Task"
+      >
+        <DeleteAlert
+          content="Are you sure you want to delete this task? This action cannot be undone."
+          onDelete={() => handleDeleteTask(openDeleteAlert.data)}
+          onCancel={() => setOpenDeleteAlert({ show: false, data: null })}
+        />
+      </DeleteModel>
     </DashboardLayout>
   );
 };

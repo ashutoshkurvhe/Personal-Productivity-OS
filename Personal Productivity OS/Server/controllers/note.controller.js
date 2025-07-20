@@ -10,7 +10,7 @@ exports.addNote = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const { title, content, tags, projectId, summary } = req.body;
+    const { title, type, content, tags, summary } = req.body;
 
     if (!title || !content) {
       return res
@@ -21,9 +21,9 @@ exports.addNote = async (req, res) => {
     const newNote = new Note({
       userId,
       title,
+      type,
       content,
       tags,
-      projectId,
       summary,
     });
 
@@ -40,8 +40,18 @@ exports.getAllNotes = async (req, res) => {
   const userId = req.user.id;
 
   try {
-    const notes = await Note.find({ userId });
-    res.status(200).json(notes);
+     const notes = await Note.find({ userId }).sort([
+       ["type", 1], // Sort by type alphabetically: archived < favorite < normal < pinned
+       ["createdAt", -1], // Optional: most recent first
+     ]);
+
+     // Optionally reverse the order if you want pinned > others
+     const sortedNotes = [
+       ...notes.filter((note) => note.type === "pinned"),
+       ...notes.filter((note) => note.type !== "pinned"),
+    ];
+    res.status(200).json(sortedNotes);
+
   } catch (error) {
     console.error("Get Notes Error:", error.message);
     res.status(500).json({ message: "Server Error" });

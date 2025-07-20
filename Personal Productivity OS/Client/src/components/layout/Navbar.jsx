@@ -1,9 +1,10 @@
-import { useState } from "react";
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { UserContext } from "../../context/userContext";
 import { CiDark, CiLight } from "react-icons/ci";
 import { IoIosNotificationsOutline } from "react-icons/io";
-import { HiOutlineX, HiOutlineMenu } from "react-icons/hi";
+import { HiOutlineX } from "react-icons/hi";
+import { FaBarsStaggered } from "react-icons/fa6";
+
 import SideMenu from "../layout/Sidebar";
 import CharAvatar from "../Cards/CharAvatar";
 
@@ -11,32 +12,32 @@ const Navbar = ({ activeMenu }) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
   const [darktheme, setDarkTheme] = useState(false);
   const { user } = useContext(UserContext);
+
   return (
-    <div className="flex items-center justify-between gap-5 bg-white border border-gray-200/50 backdrop-blur-[2px] py-2 px-7 sticky top-0 z-30">
-      <div>
+    <div className="min-w-[100vw] flex items-center justify-between gap-5 border border-gray-200/50 backdrop-blur-[8px] py-2 px-4 sticky top-0 left-0 z-30 overflow-x-hidden">
+      <div className="flex gap-5 items-center">
         <button
           className="block lg:hidden text-black"
-          onClick={() => {
-            setOpenSideMenu(!openSideMenu);
-          }}
+          onClick={() => setOpenSideMenu(!openSideMenu)}
         >
           {openSideMenu ? (
             <HiOutlineX className="text-2xl" />
           ) : (
-            <HiOutlineMenu className="text-2xl" />
+            <FaBarsStaggered className="text-2xl" />
           )}
         </button>
-        <p className="text-lg font-medium">Personal Productivity OS</p>
+        <p className="text-lg font-medium hidden md:flex">
+          Personal Productivity OS
+        </p>
       </div>
+
       <div className="flex items-center gap-3">
         <button className="block bg-gray-100 p-2 shadow-2xl rounded-lg">
           <IoIosNotificationsOutline className="text-xl" />
         </button>
         <button
           className="block bg-gray-100 p-2 shadow-2xl rounded-lg"
-          onClick={() => {
-            setDarkTheme(!darktheme);
-          }}
+          onClick={() => setDarkTheme(!darktheme)}
         >
           {darktheme ? (
             <CiDark className="text-xl" />
@@ -49,7 +50,7 @@ const Navbar = ({ activeMenu }) => {
           <img
             src={user?.profileImageUrl || ""}
             alt="Profile Image"
-            className="w-20 h-20 bg-slate-400 rounded-full"
+            className="w-12 h-12 bg-slate-400 rounded-full object-cover"
           />
         ) : (
           <CharAvatar
@@ -62,7 +63,7 @@ const Navbar = ({ activeMenu }) => {
       </div>
 
       {openSideMenu && (
-        <div className="fixed top-[61px] -ml-4 bg-white">
+        <div className="fixed top-[70px] left-0 w-full max-w-[100vw] overflow-x-hidden bg-white z-10">
           <SideMenu activeMenu={activeMenu} />
         </div>
       )}

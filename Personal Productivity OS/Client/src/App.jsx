@@ -16,7 +16,7 @@ import Pomodoro from "./pages/Dashboard/Pomodoro";
 import Home from "./pages/Dashboard/Home";
 import Note from "./pages/Dashboard/Note";
 import Project from "./pages/Dashboard/Project";
-import Task from "./pages/Dashboard/task";
+import Task from "./pages/Dashboard/Task";
 
 
 

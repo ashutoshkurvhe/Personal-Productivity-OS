@@ -14,7 +14,7 @@ const NoteSchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: ["pined", "favourite", "archived", "normal"],
+      enum: ["pinned", "favorite", "archived", "normal"],
       default: "normal",
     },
     content: {
