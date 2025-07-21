@@ -3,7 +3,7 @@ import { Listbox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 // Option format: { name: "Tom Cook", online: true }
-export default function Dropdown({ label, options = [], value, onChange }) {
+export default function Dropdown({ options = [], value, onChange }) {
   const [selectedOption, setSelectedOption] = useState(value || options[0]);
 
   useEffect(() => {
@@ -16,17 +16,12 @@ export default function Dropdown({ label, options = [], value, onChange }) {
   };
 
   return (
-    <div className="w-72 px-4">
+    <div className="w-72">
       <Listbox value={selectedOption} onChange={handleChange}>
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-pointer rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md border border-gray-300 sm:text-sm">
             <span className="flex items-center">
-              {selectedOption?.online !== undefined && (
-                <span
-                  className={`h-2.5 w-2.5 rounded-full mr-2 `}
-                />
-              )}
-              {selectedOption?.name || selectedOption}
+              {selectedOption}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon className="h-5 w-5 text-gray-500" />
@@ -46,19 +41,12 @@ export default function Dropdown({ label, options = [], value, onChange }) {
               >
                 {({ selected }) => (
                   <>
-                    {option?.online !== undefined && (
-                      <span
-                        className={`absolute left-3 top-2.5 h-2.5 w-2.5 rounded-full ${
-                          option.online ? "bg-green-500" : "bg-gray-300"
-                        }`}
-                      />
-                    )}
                     <span
                       className={`block truncate ${
                         selected ? "font-medium" : "font-normal"
                       }`}
                     >
-                      {option.name || option}
+                      {option}
                     </span>
                     {selected && (
                       <span className="absolute inset-y-0 right-3 flex items-center text-white">

@@ -7,7 +7,7 @@ import PomodoroTimer from "../../components/Pomodoro/PomodoroTimer";
 import PomodoroStats from "../../components/Pomodoro/PomodoroStats";
 
 const PomodoroPage = () => {
-    useUserAuth();
+  useUserAuth();
   const [minutes, setMinutes] = useState(25);
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(false);

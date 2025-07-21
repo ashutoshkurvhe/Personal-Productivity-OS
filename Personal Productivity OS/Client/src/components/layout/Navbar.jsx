@@ -5,7 +5,7 @@ import { IoIosNotificationsOutline } from "react-icons/io";
 import { HiOutlineX } from "react-icons/hi";
 import { FaBarsStaggered } from "react-icons/fa6";
 
-import SideMenu from "../layout/Sidebar";
+import Sidebar from "../layout/Sidebar";
 import CharAvatar from "../Cards/CharAvatar";
 
 const Navbar = ({ activeMenu }) => {
@@ -14,7 +14,7 @@ const Navbar = ({ activeMenu }) => {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="min-w-[100vw] flex items-center justify-between gap-5 border border-gray-200/50 backdrop-blur-[8px] py-2 px-4 sticky top-0 left-0 z-30 overflow-x-hidden">
+    <div className="min-w-[100vw] flex items-center justify-between gap-5 border border-gray-200/50 backdrop-blur-[8px] py-2 px-4 sticky top-0 left-0 z-30">
       <div className="flex gap-5 items-center">
         <button
           className="block lg:hidden text-black"
@@ -63,8 +63,8 @@ const Navbar = ({ activeMenu }) => {
       </div>
 
       {openSideMenu && (
-        <div className="fixed top-[70px] left-0 w-full max-w-[100vw] overflow-x-hidden bg-white z-10">
-          <SideMenu activeMenu={activeMenu} />
+        <div className="fixed top-[65px] left-0 w-64 bg-white shadow-lg transition-transform duration-300">
+          <Sidebar activeMenu={activeMenu} />
         </div>
       )}
     </div>

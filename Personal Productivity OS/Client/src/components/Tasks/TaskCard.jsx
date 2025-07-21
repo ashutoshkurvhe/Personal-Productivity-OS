@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import TasksModel from "./TasksModel";
 import {
   Calendar,
   Edit3,
@@ -21,15 +23,16 @@ const TaskCard = ({ task, onEdit, onDelete, isDragging = false }) => {
   } = useSortable({
     id: task._id,
   });
+  const [showTaskModel, setShowTaskModel] = useState(false);
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
   };
 
-  const handleDelete = () => {
-    
-  }
+  const handleOnClickThreeDots = () => {
+    setShowTaskModel(!showTaskModel);
+  };
 
   const getPriorityConfig = (priority) => {
     switch (priority) {
@@ -96,7 +99,7 @@ const TaskCard = ({ task, onEdit, onDelete, isDragging = false }) => {
       className={cardClasses}
     >
       {/* Card Header */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-3 relative">
         <div className="flex-1 min-w-0">
           <h4 className="font-medium text-gray-900 truncate mb-1">
             {task.title}
@@ -113,6 +116,11 @@ const TaskCard = ({ task, onEdit, onDelete, isDragging = false }) => {
           <PriorityIcon size={12} />
           <span>{priorityConfig.label}</span>
         </div>
+        <button onClick={() => handleOnClickThreeDots()}>
+          <BsThreeDotsVertical />
+        </button>
+
+        {showTaskModel && <TasksModel onDelete={onDelete} onEdit={onEdit} />}
       </div>
 
       {/* Card Footer */}
@@ -122,43 +130,18 @@ const TaskCard = ({ task, onEdit, onDelete, isDragging = false }) => {
           {task.dueDate && (
             <>
               <Calendar size={12} />
-              <span className={isOverdue() ? "text-red-600 font-medium" : ""}>
+              <span
+                className={isOverdue() ? "text-gray-900/50 font-medium" : ""}
+              >
                 {formatDate(task.dueDate)}
               </span>
               {isOverdue() && (
-                <span className="text-red-600 font-medium">(Overdue)</span>
+                <span className="text-gray-900/50 font-medium">(Overdue)</span>
               )}
             </>
           )}
         </div>
-
-        {/* Action Buttons */}
-        <div className="flex items-center space-x-1">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(task);
-            }}
-            className="p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors duration-200"
-            title="Edit task"
-          >
-            <Edit3 size={14} />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(task._id);
-            }}
-            className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
-            title="Delete task"
-          >
-            <Trash2 size={14} />
-          </button>
-        </div>
       </div>
-
-      {/* Status Indicator */}
-      <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-blue-500 to-blue-600 rounded-l-lg"></div>
     </div>
   );
 };

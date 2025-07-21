@@ -24,7 +24,16 @@ export const API_PATHS = {
   POMODORO: {
     SAVE_SESSION: "/api/v2/pomodoro/session",
     GET_STATS: "/api/v2/pomodoro/stats"
+  },
+  EVENTS: {
+    CREATE_EVENT: "/api/v2/event/import",
+    GET_ALL_EVENTS: "api/v2/event/",
+  },
+  NOTIFY: {
+    WEB_PUSH: "/api/v2/notify/web",
+    EMAIL_REMINDER: "/api/v2/notify/email"
   }
+
 };
 
 

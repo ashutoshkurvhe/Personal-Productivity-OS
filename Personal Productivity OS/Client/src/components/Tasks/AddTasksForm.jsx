@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Calendar, Clock, Flag, FileText } from "lucide-react";
+import Dropdown from "../Inputs/Dropdown";
 
 const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
   const [formData, setFormData] = useState({
@@ -29,22 +29,16 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.title.trim()) {
-      newErrors.title = "Title is required";
-    }
-
-    if (!formData.description.trim()) {
+    if (!formData.title.trim()) newErrors.title = "Title is required";
+    if (!formData.description.trim())
       newErrors.description = "Description is required";
-    }
 
     if (formData.dueDate) {
       const selectedDate = new Date(formData.dueDate);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-
-      if (selectedDate < today) {
+      if (selectedDate < today)
         newErrors.dueDate = "Due date cannot be in the past";
-      }
     }
 
     setErrors(newErrors);
@@ -54,9 +48,7 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     const taskData = {
       ...formData,
@@ -69,7 +61,6 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
       onAddTask(taskData);
     }
 
-    // Reset form if adding new task
     if (!initialData) {
       setFormData({
         title: "",
@@ -86,41 +77,29 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Clear error when user starts typing
+    // Clear specific field error
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
-  const statusOptions = [
-    { value: "todo", label: "To Do" },
-    { value: "in-progress", label: "In Progress" },
-    { value: "review", label: "Review" },
-    { value: "done", label: "Done" },
-  ];
+  // For custom dropdowns
+  const handleDropdownChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
-  const priorityOptions = [
-    { value: "low", label: "Low", color: "text-green-600" },
-    { value: "medium", label: "Medium", color: "text-yellow-600" },
-    { value: "high", label: "High", color: "text-red-600" },
-  ];
+  const statusOptions = ["todo", "in-progress", "review", "done"];
+  const priorityOptions = ["low", "medium", "high"];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Title Field */}
       <div>
-        <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-          <FileText size={16} />
-          <span>Task Title</span>
-        </label>
         <input
           type="text"
           name="title"
           value={formData.title}
           onChange={handleInputChange}
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-            errors.title ? "border-red-300 bg-red-50" : "border-gray-300"
-          }`}
+          className="title w-full p-2"
           placeholder="Enter task title..."
         />
         {errors.title && (
@@ -128,18 +107,13 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
         )}
       </div>
 
-      {/* Description Field */}
       <div>
-        <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-          <FileText size={16} />
-          <span>Description</span>
-        </label>
         <textarea
           name="description"
           value={formData.description}
           onChange={handleInputChange}
           rows={4}
-          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors resize-none ${
+          className={`text-lg w-full ${
             errors.description ? "border-red-300 bg-red-50" : "border-gray-300"
           }`}
           placeholder="Describe the task..."
@@ -149,82 +123,42 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
         )}
       </div>
 
-      {/* Due Date and Priority Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-            <Calendar size={16} />
-            <span>Due Date</span>
-          </label>
-          <input
-            type="date"
-            name="dueDate"
-            value={formData.dueDate}
-            onChange={handleInputChange}
-            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
-              errors.dueDate ? "border-red-300 bg-red-50" : "border-gray-300"
-            }`}
-          />
-          {errors.dueDate && (
-            <p className="mt-1 text-sm text-red-600">{errors.dueDate}</p>
-          )}
-        </div>
-
-        {/* Priority */}
-        <div>
-          <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-            <Flag size={16} />
-            <span>Priority</span>
-          </label>
-          <select
-            name="priority"
-            value={formData.priority}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-          >
-            {priorityOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Status Field */}
-      <div>
-        <label className="flex items-center space-x-2 text-sm font-medium text-gray-700 mb-2">
-          <Clock size={16} />
-          <span>Status</span>
-        </label>
-        <select
-          name="taskStatus"
-          value={formData.taskStatus}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-72">
+        <input
+          type="date"
+          name="dueDate"
+          value={formData.dueDate}
           onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-        >
-          {statusOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors ${
+            errors.dueDate ? "border-red-300 bg-red-50" : "border-gray-300"
+          }`}
+        />
+        {errors.dueDate && (
+          <p className="mt-1 text-sm text-red-600">{errors.dueDate}</p>
+        )}
       </div>
 
-      {/* Submit Button */}
+      <div>
+        <Dropdown
+          options={priorityOptions}
+          value={formData.priority}
+          onChange={(value) => handleDropdownChange("priority", value)}
+        />
+      </div>
+
+      <div>
+        <Dropdown
+          options={statusOptions}
+          value={formData.taskStatus}
+          onChange={(value) => handleDropdownChange("taskStatus", value)}
+        />
+      </div>
+
       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
-        <button
-          type="submit"
-          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
+        <button type="submit" className="add-btn">
           {initialData ? "Update Task" : "Create Task"}
         </button>
-
-
-
-        
       </div>
-      
     </form>
   );
 };
