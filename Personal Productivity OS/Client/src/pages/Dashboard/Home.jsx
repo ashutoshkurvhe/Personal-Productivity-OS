@@ -7,10 +7,10 @@ import TotalInfo from "../../components/Dashboard/TotalInfo";
 import RecentNotes from "../../components/Dashboard/RecentNotes";
 import RecentTasks from "../../components/Dashboard/RecentTasks";
 import UpcomingEvents from "../../components/Dashboard/UpcomingEvents";
-import PomodoroTimer from "../../components/Pomodoro/PomodoroTimer"; // ✅
+import PomodoroTimer from "../../components/Pomodoro/PomodoroTimer"; // 
 
-import { CiPlay1, CiPause1 } from "react-icons/ci"; // ✅
-import { MdOutlineRestartAlt } from "react-icons/md"; // ✅
+import { CiPlay1, CiPause1 } from "react-icons/ci"; // 
+import { MdOutlineRestartAlt } from "react-icons/md"; // 
 
 const Home = () => {
   useUserAuth();
@@ -38,7 +38,7 @@ const Home = () => {
     fetchDashboardData();
   }, []);
 
-  // ✅ Pomodoro Timer Logic (copied from PomodoroPage)
+  //Pomodoro Timer Logic (copied from PomodoroPage)
   const DEFAULT_DURATION = 25 * 60;
   const [totalTime, setTotalTime] = useState(DEFAULT_DURATION);
   const [isRunning, setIsRunning] = useState(false);
