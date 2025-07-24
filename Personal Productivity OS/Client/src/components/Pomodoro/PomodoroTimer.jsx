@@ -1,40 +1,43 @@
-import React from 'react'
+import React from "react";
 
-const PomodoroTimer = ({ isRunning, buttons, minutes, seconds }) => {
-    const { start, stop, reset } = buttons;
+const PomodoroTimer = ({ isRunning, buttons={}, minutes, seconds }) => {
+  const { start={}, stop={}, reset={} } = buttons;
+  console.log(buttons)
+
   return (
-    <div className="w-full p-8 my-6 text-center bg-gray-50 shadow-md border-1 border-gray-200 rounded-xl">
-      <h1 className="text-3xl font-bold mb-4 text-gray-800 dark:text-white">
-        Pomodoro Timer
-      </h1>
+    <div className="w-full p-5 my-6 text-center h-full bg-gray-50 shadow-md border-1 border-gray-200 rounded-xl">
+      <h1 className="text-center text-3xl font-medium mb-5">Timer</h1>
       <div className="text-6xl font-mono text-black mb-6">
         {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
       </div>
 
-      <div className="space-x-4">
+      <div className="flex justify-center gap-5">
         <button
           onClick={start.handleStart}
           disabled={isRunning}
-          className="px-6 py-2 bg-green-400/50 hover:bg-green-500/50 text-black font-semibold rounded-xl"
+          className="flex items-center gap-2 px-6 py-2 bg-black text-white hover:bg-gray-400/50 font-semibold rounded-md"
         >
-          {start.label}
+          {start.icon}
+          <span className="hidden md:flex">{start.label}</span>
         </button>
         <button
           onClick={stop.handlePause}
           disabled={!isRunning}
-          className="px-6 py-2 bg-yellow-400/50 hover:bg-yellow-500/50 text-black font-semibold rounded-xl"
+          className="flex items-center gap-2 px-6 py-2 bg-black text-white hover:bg-gray-400/50 font-semibold rounded-md"
         >
-          {stop.label}
+          {stop.icon}
+          <span className="hidden md:flex">{stop.label}</span>
         </button>
         <button
           onClick={reset.handleReset}
-          className="px-6 py-2 bg-gray-400/50 hover:bg-gray-500/50 text-black font-semibold rounded-xl"
+          className="flex items-center gap-2 px-6 py-2 bg-black text-white hover:bg-gray-400/50 font-semibold rounded-md"
         >
-          {reset.label}
+          {reset.icon}
+          <span className="hidden md:flex">{reset.label}</span>
         </button>
       </div>
     </div>
   );
-}
+};
 
-export default PomodoroTimer
+export default PomodoroTimer;

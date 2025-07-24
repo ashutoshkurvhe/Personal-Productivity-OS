@@ -28,12 +28,41 @@ exports.savePomodoroSession = async (req, res) => {
 
 exports.getPomodoroStats = async (req, res) => {
   try {
-    // In the future: query PomodoroSession collection for real stats
+    const userId = req.user.id;
+
+    // Get all sessions for the user
+    const sessions = await PomodoroSession.find({ userId });
+
+    // Total sessions
+    const sessionsCompleted = sessions.length;
+
+    // Total time (in minutes)
+    const totalTime = sessions.reduce(
+      (sum, session) => sum + session.duration,
+      0
+    );
+
+    // Get today's date boundaries
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayEnd = new Date();
+    todayEnd.setHours(23, 59, 59, 999);
+
+    // Filter sessions for today
+    const sessionsToday = sessions.filter(
+      (s) => s.completedAt >= todayStart && s.completedAt <= todayEnd
+    ).length;
 
     res.json({
-      completedToday: 3,
-      totalTime: 75, // minutes
+      sessions,
+      sessionsCompleted,
+      totalTime, // in minutes
+      sessionsToday,
+      todayStart,
+      todayEnd,
     });
+    
   } catch (error) {
     console.error("Get Pomodoro Stats Error:", error.message);
     res

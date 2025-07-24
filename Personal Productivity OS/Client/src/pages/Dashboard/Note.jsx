@@ -197,7 +197,7 @@ const Note = () => {
   return (
     <DashboardLayout>
       <div className="">
-        <div className="flex justify-between px-4 py-6">
+        <div className="flex justify-between px-2 py-6">
           <h1 className="text-2xl font-medium">Notes</h1>
           <button
             className="add-btn"
@@ -206,7 +206,7 @@ const Note = () => {
             <LuPlus className="text-lg" /> Add Note
           </button>
         </div>
-        <div>
+        <div className="">
           {openAddNotesModel ? (
             <Model
               isOpen={openAddNotesModel}

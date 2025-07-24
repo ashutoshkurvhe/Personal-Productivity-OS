@@ -5,40 +5,41 @@ import { API_PATHS } from "../../utils/apiPaths";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import PomodoroTimer from "../../components/Pomodoro/PomodoroTimer";
 import PomodoroStats from "../../components/Pomodoro/PomodoroStats";
+import { CiPlay1, CiPause1 } from "react-icons/ci";
+import { MdOutlineRestartAlt } from "react-icons/md";
+import Home from "./Home";
 
 const PomodoroPage = () => {
   useUserAuth();
-  const [minutes, setMinutes] = useState(25);
-  const [seconds, setSeconds] = useState(0);
+
+  const DEFAULT_DURATION = 25 * 60; // 25 minutes
+  const [totalTime, setTotalTime] = useState(DEFAULT_DURATION);
   const [isRunning, setIsRunning] = useState(false);
-  const [sessionsCompleted, setSessionsCompleted] = useState(0);
   const [stats, setStats] = useState(null);
 
+  // Countdown logic
   useEffect(() => {
     let timer;
-    if (isRunning) {
+    if (isRunning && totalTime > 0) {
       timer = setInterval(() => {
-        if (seconds > 0) {
-          setSeconds((prev) => prev - 1);
-        } else if (minutes > 0) {
-          setMinutes((prev) => prev - 1);
-          setSeconds(59);
-        } else {
-          clearInterval(timer);
-          setIsRunning(false);
-          setSessionsCompleted((prev) => prev + 1);
-          savePomodoroSession();
-        }
+        setTotalTime((prev) => prev - 1);
       }, 1000);
     }
-    return () => clearInterval(timer);
-  }, [isRunning, minutes, seconds]);
 
+    if (totalTime === 0 && isRunning) {
+      setIsRunning(false);
+      savePomodoroSession();
+    }
+
+    return () => clearInterval(timer);
+  }, [isRunning, totalTime]);
+
+  // Save completed session
   const savePomodoroSession = async () => {
     try {
       await axiosInstance.post(API_PATHS.POMODORO.SAVE_SESSION, {
-        duration: 25,
-        timestamp: new Date(),
+        duration: Math.floor((DEFAULT_DURATION - totalTime) / 60), // minutes completed
+        completedAt: new Date(),
       });
       fetchStats();
     } catch (error) {
@@ -46,6 +47,7 @@ const PomodoroPage = () => {
     }
   };
 
+  // Get stats from backend
   const fetchStats = async () => {
     try {
       const res = await axiosInstance.get(API_PATHS.POMODORO.GET_STATS);
@@ -59,41 +61,46 @@ const PomodoroPage = () => {
     fetchStats();
   }, []);
 
-
   const buttons = {
     start: {
       label: "Start",
-      icon: "",
-      handleStart : () => setIsRunning(true)
+      icon: <CiPlay1 />,
+      handleStart: () => setIsRunning(true),
     },
     stop: {
       label: "Stop",
-      icon: "",
-      handleStop : () => setIsRunning(false)
+      icon: <CiPause1 />,
+      handlePause: () => setIsRunning(false),
     },
     reset: {
       label: "Reset",
-      icon: "",
+      icon: <MdOutlineRestartAlt />,
       handleReset: () => {
-  setIsRunning(false);
-  setMinutes(25);
-  setSeconds(0);
-}
+        setIsRunning(false);
+        setTotalTime(DEFAULT_DURATION);
+      },
+    },
+  };
 
-    }
-  }
+  const minutes = Math.floor(totalTime / 60);
+  const seconds = totalTime % 60;
 
   return (
     <DashboardLayout>
-      <div className="px-4 py-6">
+      <div className="py-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-medium">Pomodoro</h1>
         </div>
-        <PomodoroTimer buttons={buttons} isRunning={isRunning}  minutes={minutes} seconds={seconds} />
-        
-        <PomodoroStats stats={stats} sessionsCompleted={sessionsCompleted} />
-          
-        </div>
+
+        <PomodoroTimer
+          buttons={buttons}
+          isRunning={isRunning}
+          minutes={minutes}
+          seconds={seconds}
+        />
+
+        <PomodoroStats stats={stats} />
+      </div>
     </DashboardLayout>
   );
 };

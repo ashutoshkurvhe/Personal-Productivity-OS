@@ -14,7 +14,7 @@ const Navbar = ({ activeMenu }) => {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="min-w-[100vw] flex items-center justify-between gap-5 border border-gray-200/50 backdrop-blur-[8px] py-2 px-4 sticky top-0 left-0 z-30">
+    <div className="w-[100vw] flex items-center justify-between gap-5 border border-gray-200 backdrop-blur-[8px] py-2 px-4 sticky top-0 left-0 z-30">
       <div className="flex gap-5 items-center">
         <button
           className="block lg:hidden text-black"

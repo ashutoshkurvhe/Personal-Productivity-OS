@@ -26,6 +26,7 @@ exports.importICal = async (req, res) => {
           title: vevent.summary,
           start: vevent.startDate.toJSDate(),
           end: vevent.endDate.toJSDate(),
+          date: vevent.date.toJSDate(),
           externalId: vevent.uid,
         },
         { upsert: true }

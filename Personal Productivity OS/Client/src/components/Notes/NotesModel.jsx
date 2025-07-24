@@ -50,14 +50,14 @@ const NotesModel = ({
       </button>
       <button
         className="flex items-center gap-2 px-2"
-        onClick={() => {(onEdit)(); setShowNotesModel(false) }}
+        onClick={() => {onEdit(); setShowNotesModel(false) }}
       >
         <AiOutlineEdit />
         Edit
       </button>
       <button
         className="flex items-center gap-2 px-2 text-red-500"
-        onClick={() => { (onDelete)(); setShowNotesModel(false); }}
+        onClick={() => { onDelete(); setShowNotesModel(false); }}
       >
         <MdOutlineDelete />
         Delete

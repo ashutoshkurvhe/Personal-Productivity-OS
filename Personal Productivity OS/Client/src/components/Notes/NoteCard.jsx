@@ -52,7 +52,7 @@ const NoteCard = ({ note, onDelete, onEdit, onPin, onUnpin, onArchived, onUnarch
   }, [showNotesModel]);
 
   return (
-    <div className="flex flex-col justify-between bg-white shadow-md rounded-lg p-4 mb-4 hover:shadow-lg transition-shadow duration-300 min-h-[200px] relative">
+    <div className="flex flex-col justify-between shadow-md rounded-lg p-4 mb-4 hover:shadow-lg transition-shadow duration-300  min-h-[200px] relative">
       <div>
         <div className="flex items-start justify-between mb-2">
           <h1 className="text-xl font-medium mb-4">{title}</h1>
@@ -82,7 +82,7 @@ const NoteCard = ({ note, onDelete, onEdit, onPin, onUnpin, onArchived, onUnarch
             </span>
           ))}
         </div>
-        <span className="text-sm text-gray-900 bg-gray-100 px-2 rounded-full">
+        <span className="text-sm text-white bg-black px-2 py-1 rounded-full">
           {new Date(createdAt).toLocaleDateString("en-US", {
             year: "numeric",
             month: "short",

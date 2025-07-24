@@ -5,8 +5,6 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import TasksModel from "./TasksModel";
 import {
   Calendar,
-  Edit3,
-  Trash2,
   AlertCircle,
   Clock,
   CheckCircle,

@@ -31,7 +31,10 @@ export const API_PATHS = {
   },
   NOTIFY: {
     WEB_PUSH: "/api/v2/notify/web",
-    EMAIL_REMINDER: "/api/v2/notify/email"
+    EMAIL_REMINDER: "/api/v2/notify/email",
+  },
+  DASHBOARD: {
+    GET_DASHBOARD_DATA: "/api/v2/dashboard/",
   }
 
 };

@@ -156,8 +156,8 @@ const KanbanBoard = ({
         <div className="flex items-center space-x-4">
           <h2 className="text-xl font-semibold text-gray-800">Task Board</h2>
           <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <span className="bg-gray-100 px-2 py-1 rounded-full">
-              {tasks.length} Total Tasks
+            <span className="flex gap-2 bg-gray-100 px-2 py-1 rounded-full">
+              {tasks.length} <span className="hidden md:flex">Total Tasks</span>
             </span>
           </div>
         </div>

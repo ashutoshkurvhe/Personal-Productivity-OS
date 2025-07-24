@@ -34,9 +34,9 @@ const NotesList = ({
 
   return (
     <div className="">
-      <div className="p-4">
+      <div className="p-2">
         {/* Tabs Navigation*/}
-        <div className="flex gap-4 mb-4">
+        <div className="flex md:gap-4 mb-4">
           {tabs.map((tab) => (
             <button
               key={tab.type}
@@ -55,7 +55,7 @@ const NotesList = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredNotes?.map((note) => (
           <NoteCard
             key={note._id}

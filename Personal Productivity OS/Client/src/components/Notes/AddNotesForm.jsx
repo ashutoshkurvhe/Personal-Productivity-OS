@@ -12,14 +12,14 @@ const AddNotesForm = ({ onAddNote }) => {
 
   const handleChange = (key, value) => setNote({ ...note, [key]: value });
   return (
-    <div className="h-[500px]">
+    <form onSubmit={() => onAddNote(note)} className="w-full">
       <div className="flex flex-col gap-10">
         <input
           value={note.title}
           onChange={({ target }) => handleChange("title", target.value)}
           placeholder="Note title"
           type="text"
-          className="title text-2xl font-medium px-4"
+          className="title text-2xl font-medium w-[100%] px-4"
         />
 
         <input
@@ -34,18 +34,17 @@ const AddNotesForm = ({ onAddNote }) => {
           value={note.content}
           onChange={({ target }) => handleChange("content", target.value)}
           placeholder="start writing your notes... (markdown supported)"
-          className="content min-h-[300px] px-4"
+          className="content min-h-[250px] px-4 border-1 border-gray-200 rounded-xl"
         />
 
-        <button
-          className="add-btn absolute bottom-5 right-5"
-          onClick={() => onAddNote(note)}
+        <button type="submit"
+          className="add-btn max-w-[100px] self-end"
         >
           <IoSaveOutline />
           Save
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 
