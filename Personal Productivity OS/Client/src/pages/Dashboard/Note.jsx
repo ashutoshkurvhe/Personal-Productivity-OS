@@ -1,22 +1,27 @@
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import AddNotesForm from "../../components/Notes/AddNotesForm";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import Model from "../../components/common/Model";
 import DeleteModel from "../../components/common/DeleteModel";
 import DeleteAlert from "../../components/common/DeleteAlert";
 import NotesList from "../../components/Notes/NotesList";
 import { LuPlus } from "react-icons/lu";
-
+import NoteDetails from "../../components/Notes/NotesDetails";
 
 const Note = () => {
   useUserAuth();
   const [notesData, setNotesData] = useState([]);
+  const [singleNoteData, setSingleNoteData] = useState({});
   const [loading, setLoading] = useState(false);
   const [openAddNotesModel, setOpenAddNotesModel] = useState(false);
+  const [openCartDetails, setOpenCartDetails] = useState({
+    show: false,
+    data: null,
+  });
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     show: false,
     data: null,
@@ -31,7 +36,9 @@ const Note = () => {
     if (loading) return;
     setLoading(true);
     try {
-      const response = await axiosInstance.get(`${API_PATHS.NOTES.GET_ALL_NOTES}`);
+      const response = await axiosInstance.get(
+        `${API_PATHS.NOTES.GET_ALL_NOTES}`
+      );
 
       if (response.data) {
         setNotesData(response.data);
@@ -43,6 +50,17 @@ const Note = () => {
     }
   };
 
+   const fetchSingleNote = async (noteId) => {
+     try {
+       const res = await axiosInstance.get(API_PATHS.NOTES.GET_NOTE(noteId));
+       setSingleNoteData(res.data);
+       fetchAllNotes();
+     } catch (err) {
+       console.error("Error fetching single note:", err.message);
+     }
+   };
+
+
   //Handle Add Expense
   const handleAddNote = async (note) => {
     if (!note) {
@@ -51,7 +69,6 @@ const Note = () => {
     }
 
     const { title, content, tags } = note;
-    
 
     //Validation Checks
     if (!title.trim() || !content.trim()) {
@@ -76,7 +93,8 @@ const Note = () => {
       fetchAllNotes();
     } catch (error) {
       console.error(
-        "Error adding expense:", error.response?.data.message || error.message
+        "Error adding expense:",
+        error.response?.data.message || error.message
       );
     }
   };
@@ -91,107 +109,133 @@ const Note = () => {
       fetchAllNotes();
     } catch (error) {
       console.error(
-        "Error deleting note:", error.response?.data.message || error.message
+        "Error deleting note:",
+        error.response?.data.message || error.message
       );
     }
-  }
+  };
 
   //Update Note
-  const handleUpdateNote = async (noteId, updatedNote) => { 
+  const handleUpdateNote = async (noteId, updatedNote) => {
     try {
       await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), updatedNote);
       toast.success("Note updated successfully.");
       fetchAllNotes();
-    }catch (error) {
+    } catch (error) {
       console.error(
-        "Error updating note:", error.response?.data.message || error.message
+        "Error updating note:",
+        error.response?.data.message || error.message
       );
     }
-  }
+  };
 
   //Summarize Note
-  const handleSummarizeNote = async (noteId) => { };
+  const handleSummarizeNote = async (noteId) => {
+    try {
+      await axiosInstance.get(API_PATHS.NOTES.SUMMARIZE_NOTE(noteId));
+      toast.success("Note summarized successfully.");
+      fetchAllNotes();
+    } catch (error) {
+      console.error(
+        "Error updating note:",
+        error.response?.data.message || error.message
+      );
+    }
+  };
 
   const handlePinNote = async (noteId) => {
     try {
-      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), { type: "pinned" });
+      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), {
+        type: "pinned",
+      });
       toast.success("Note pinned successfully.");
       fetchAllNotes();
     } catch (error) {
       console.error(
-        "Error pinning note:", error.response?.data.message || error.message
+        "Error pinning note:",
+        error.response?.data.message || error.message
       );
     }
-  }
+  };
 
   const handleUnpinNote = async (noteId) => {
     try {
-      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), { type: "normal" });
+      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), {
+        type: "normal",
+      });
       toast.success("Note unpinned successfully.");
       fetchAllNotes();
-    }
-    catch (error) {
+    } catch (error) {
       console.error(
-        "Error unpinning note:", error.response?.data.message || error.message
+        "Error unpinning note:",
+        error.response?.data.message || error.message
       );
     }
-  }
+  };
 
   const handleArchiveNote = async (noteId) => {
     try {
-      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), { type: "archived" });
+      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), {
+        type: "archived",
+      });
       toast.success("Note archived successfully.");
       fetchAllNotes();
-    }
-
-    catch (error) {
-      console.error(  
-        "Error archiving note:", error.response?.data.message || error.message
+    } catch (error) {
+      console.error(
+        "Error archiving note:",
+        error.response?.data.message || error.message
       );
     }
-  }
+  };
 
   const handleUnarchiveNote = async (noteId) => {
     try {
-      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), { type: "normal" });
+      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), {
+        type: "normal",
+      });
       toast.success("Note unarchived successfully.");
       fetchAllNotes();
     } catch (error) {
       console.error(
-        "Error unarchiving note:", error.response?.data.message || error.message
+        "Error unarchiving note:",
+        error.response?.data.message || error.message
       );
     }
-  }
+  };
 
   const handleFavoriteNote = async (noteId) => {
-
     try {
-      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), { type: "favorite" });
+      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), {
+        type: "favorite",
+      });
       toast.success("Note favorited successfully.");
       fetchAllNotes();
-    }
-    catch (error) {
+    } catch (error) {
       console.error(
-        "Error favoriting note:", error.response?.data.message || error.message
+        "Error favoriting note:",
+        error.response?.data.message || error.message
       );
     }
-  }
+  };
 
   const handleUnfavoriteNote = async (noteId) => {
     try {
-      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), { type: "normal" });
+      await axiosInstance.put(API_PATHS.NOTES.UPDATE_NOTE(noteId), {
+        type: "normal",
+      });
       toast.success("Note unfavorited successfully.");
       fetchAllNotes();
     } catch (error) {
       console.error(
-        "Error unfavoriting note:", error.response?.data.message || error.message
+        "Error unfavoriting note:",
+        error.response?.data.message || error.message
       );
     }
-  }
+  };
 
   useEffect(() => {
     fetchAllNotes();
-    return () => { };
+    return () => {};
   }, []);
 
   return (
@@ -228,6 +272,14 @@ const Note = () => {
                 }
               />
             </Model>
+          ) : openCartDetails.show ? (
+            <Model
+              isOpen={openCartDetails.show}
+              onClose={() => setOpenCartDetails({ show: false, data: null })}
+              title="Note Details"
+            >
+              <NoteDetails noteData={singleNoteData} />
+            </Model>
           ) : (
             <NotesList
               notes={notesData}
@@ -242,6 +294,9 @@ const Note = () => {
               onUnfavorite={handleUnfavoriteNote}
               onArchived={handleArchiveNote}
               onUnarchived={handleUnarchiveNote}
+              onSummarized={handleSummarizeNote}
+              onClickNote={(id) => fetchSingleNote(id)}
+              onClickNoteDetails={() => setOpenCartDetails({ show: true })}
             />
           )}
         </div>

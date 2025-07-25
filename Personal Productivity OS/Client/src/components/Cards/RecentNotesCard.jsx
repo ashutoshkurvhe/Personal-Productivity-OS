@@ -58,23 +58,22 @@ const RecentNotesCard = ({
         <p className="text-sm text-gray-600 ">{summary}</p>
         <div className="flex justify-between">
           <div>
-
-          {separatedTags.map((tag, index) => (
-            <span
-            key={index}
-            className="text-sm bg-slate-200/50 mr-1 px-2 py-1 rounded-xl text-gray-800"
-            >
-              #{tag}
-            </span>
-          ))}
+            {separatedTags.map((tag, index) => (
+              <span
+                key={index}
+                className="text-sm bg-slate-200/50 mr-1 px-2 py-1 rounded-xl text-gray-800"
+              >
+                #{tag}
+              </span>
+            ))}
           </div>
-          <p className="text-sm text-gray">
+          <span className="text-sm text-center text-white bg-black px-2 py-1 min-w-[100px] rounded-full">
             {new Date(createdAt).toLocaleDateString("en-US", {
               year: "numeric",
               month: "short",
               day: "numeric",
             })}
-          </p>
+          </span>
         </div>
       </div>
     </div>

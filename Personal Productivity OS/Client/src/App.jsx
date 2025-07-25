@@ -15,6 +15,7 @@ import CalendarEvent from "./pages/Dashboard/CalendarEvents";
 import Pomodoro from "./pages/Dashboard/Pomodoro";
 import Home from "./pages/Dashboard/Home";
 import Note from "./pages/Dashboard/Note";
+import NoteDetails from "./components/Notes/NotesDetails";
 import Project from "./pages/Dashboard/Project";
 import Task from "./pages/Dashboard/Task";
 
@@ -39,11 +40,12 @@ function App() {
             <Route path="/projects" element={<Project />} />
             <Route path="/pomodoro" element={<Pomodoro />} />
             <Route path="/events" element={<CalendarEvent />} />
+            <Route path="/notes/:id" element={<NoteDetails />} />
             {/* <Route path="*" element={<Navigate to="/" />} /> */}
           </Routes>
         </Router>
       </div>
- </UserProvider>
+    </UserProvider>
   );
 }
 

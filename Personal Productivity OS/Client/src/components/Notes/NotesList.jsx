@@ -13,6 +13,9 @@ const NotesList = ({
   onUnarchived,
   onFavorite,
   onUnfavorite,
+  onSummarized,
+  onClickNote,
+  onClickNoteDetails
 }) => {
   const [activeType, setActiveType] = useState("all");
   const [filteredNotes, setFilteredNotes] = useState(notes);
@@ -68,6 +71,9 @@ const NotesList = ({
             onUnarchived={() => onUnarchived(note._id)}
             onFavorite={() => onFavorite(note._id)}
             onUnfavorite={() => onUnfavorite(note._id)}
+            onSummarized={() => onSummarized(note._id)}
+            onClickNote={() => onClickNote(note._id)}
+            onClickNoteDetails={onClickNoteDetails}
           />
         ))}
       </div>

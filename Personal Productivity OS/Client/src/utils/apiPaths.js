@@ -10,9 +10,10 @@ export const API_PATHS = {
   NOTES: {
     ADD_NOTE: "/api/v2/note/",
     GET_ALL_NOTES: "/api/v2/note/",
+    GET_NOTE: (noteId) => `/api/v2/note/${noteId}`,
     UPDATE_NOTE: (noteId) => `/api/v2/note/${noteId}`,
     DELETE_NOTE: (noteId) => `/api/v2/note/${noteId}`,
-    SUMMARIZE_NOTE: (noteId) => `/api/v2/note/summarizeNote/${noteId}`,
+    SUMMARIZE_NOTE: (noteId) => `/api/v2/note/${noteId}/summarize`,
   },
   TASKS: {
     ADD_TASK: "/api/v2/task/",
@@ -23,7 +24,7 @@ export const API_PATHS = {
   },
   POMODORO: {
     SAVE_SESSION: "/api/v2/pomodoro/session",
-    GET_STATS: "/api/v2/pomodoro/stats"
+    GET_STATS: "/api/v2/pomodoro/stats",
   },
   EVENTS: {
     CREATE_EVENT: "/api/v2/event/import",
@@ -35,8 +36,7 @@ export const API_PATHS = {
   },
   DASHBOARD: {
     GET_DASHBOARD_DATA: "/api/v2/dashboard/",
-  }
-
+  },
 };
 
 

@@ -14,7 +14,7 @@ const UpcomingEvents = ({ dashboardData }) => {
           <UpcomingEventsCard
             key={event._id}
             title={event.title}
-            stastTime={event.start}
+            startTime={event.start}
             date={event.date}
           />
         ))}

@@ -14,7 +14,8 @@ const RecentNotes = ({ dashboardData }) => {
               type={note.type}
               taskStatus={note.taskStatus}
               tags={note.tags}
-              summary={note.summary}
+          summary={note.summary}
+          createdAt={note.createdAt}
         />
       ))}
     </div>
