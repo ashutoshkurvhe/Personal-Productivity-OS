@@ -2,7 +2,6 @@ import React from "react";
 
 const PomodoroTimer = ({ isRunning, buttons={}, minutes, seconds }) => {
   const { start={}, stop={}, reset={} } = buttons;
-  console.log(buttons)
 
   return (
     <div className="w-full p-5 my-6 text-center h-full bg-gray-50 shadow-md border-1 border-gray-200 rounded-xl">

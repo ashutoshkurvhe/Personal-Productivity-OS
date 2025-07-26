@@ -143,7 +143,7 @@ const KanbanBoard = ({
     }
   };
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = () => {
     setActiveId(null);
   };
 

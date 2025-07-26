@@ -7,7 +7,7 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
     description: "",
     dueDate: "",
     priority: "medium",
-    taskStatus: "todo",
+    taskStatus: "pending",
     orderIndex: 0,
   });
 
@@ -20,75 +20,47 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
         description: initialData.description || "",
         dueDate: initialData.dueDate ? initialData.dueDate.split("T")[0] : "",
         priority: initialData.priority || "medium",
-        taskStatus: initialData.taskStatus || "todo",
+        taskStatus: initialData.taskStatus || "pending",
         orderIndex: initialData.orderIndex || 0,
       });
     }
   }, [initialData]);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDropdownChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
   const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.title.trim()) newErrors.title = "Title is required";
+    let newErrors = {};
+    if (!formData.title.trim()) newErrors.title = "Title is required.";
     if (!formData.description.trim())
-      newErrors.description = "Description is required";
-
-    if (formData.dueDate) {
-      const selectedDate = new Date(formData.dueDate);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      if (selectedDate < today)
-        newErrors.dueDate = "Due date cannot be in the past";
-    }
-
+      newErrors.description = "Description is required.";
+    if (!formData.dueDate) newErrors.dueDate = "Due date is required.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!validateForm()) return;
-
-    const taskData = {
-      ...formData,
-      dueDate: formData.dueDate || undefined,
-    };
-
-    if (initialData && onUpdateTask) {
-      onUpdateTask(taskData);
-    } else if (onAddTask) {
-      onAddTask(taskData);
-    }
-
-    if (!initialData) {
-      setFormData({
-        title: "",
-        description: "",
-        dueDate: "",
-        priority: "medium",
-        taskStatus: "todo",
-        orderIndex: 0,
-      });
-    }
+    initialData ? onUpdateTask(formData) : onAddTask(formData);
+    setFormData({
+      title: "",
+      description: "",
+      dueDate: "",
+      priority: "medium",
+      taskStatus: "todo",
+      orderIndex: 0,
+    });
+    setErrors({});
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    // Clear specific field error
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
-
-  // For custom dropdowns
-  const handleDropdownChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const statusOptions = ["todo", "in-progress", "review", "done"];
+  const statusOptions = ["todo", "in-progress", "review", "completed"];
   const priorityOptions = ["low", "medium", "high"];
 
   return (
@@ -99,7 +71,7 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
           name="title"
           value={formData.title}
           onChange={handleInputChange}
-          className="title w-full p-2"
+          className="w-full p-2 border rounded"
           placeholder="Enter task title..."
         />
         {errors.title && (
@@ -107,23 +79,7 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
         )}
       </div>
 
-      <div>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-          rows={4}
-          className={`text-lg w-full ${
-            errors.description ? "border-red-300 bg-red-50" : "border-gray-300"
-          }`}
-          placeholder="Describe the task..."
-        />
-        {errors.description && (
-          <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-72">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
           type="date"
           name="dueDate"
@@ -152,6 +108,22 @@ const AddTasksForm = ({ onAddTask, onUpdateTask, initialData = null }) => {
           value={formData.taskStatus}
           onChange={(value) => handleDropdownChange("taskStatus", value)}
         />
+      </div>
+
+      <div>
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleInputChange}
+          rows={4}
+          className={`text-lg w-full border rounded p-2 ${
+            errors.description ? "border-red-300 bg-red-50" : "border-gray-300"
+          }`}
+          placeholder="Describe the task..."
+        />
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-600">{errors.description}</p>
+        )}
       </div>
 
       <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">

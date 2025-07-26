@@ -12,7 +12,7 @@ const RecentNotesCard = ({
   summary,
   createdAt,
 }) => {
-  const separatedTags = tags.split(",");
+  const separateTags = tags.split(",");
 
   const showType = (type) => {
     switch (type) {
@@ -56,16 +56,22 @@ const RecentNotesCard = ({
         </div>
         <p className="text-sm text-gray-600 ">{content}</p>
         <p className="text-sm text-gray-600 ">{summary}</p>
-        <div className="flex justify-between">
-          <div>
-            {separatedTags.map((tag, index) => (
+        <div className="flex items-center justify-between">
+          <div className="hidden md:flex flex-wrap">
+            {separateTags?.map((tag, index) => (
               <span
                 key={index}
-                className="text-sm bg-slate-200/50 mr-1 px-2 py-1 rounded-xl text-gray-800"
+                className="text-xs bg-gray-200/50 text-black px-2 py-1 rounded-full mr-2 mb-2"
               >
                 #{tag}
               </span>
             ))}
+          </div>
+          <div className="flex md:hidden">
+            <span className="text-xs bg-gray-200/50 text-black px-2 py-1 rounded-full mr-2 mb-2">
+              #{separateTags[0]}
+            </span>
+            <span>+{separateTags.length - 1}</span>
           </div>
           <span className="text-sm text-center text-white bg-black px-2 py-1 min-w-[100px] rounded-full">
             {new Date(createdAt).toLocaleDateString("en-US", {

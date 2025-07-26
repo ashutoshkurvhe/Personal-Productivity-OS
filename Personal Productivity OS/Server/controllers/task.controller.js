@@ -32,7 +32,7 @@ exports.addTask = async (req, res) => {
 
     await newTask.save();
     res.status(200).json(newTask);
-  } catch {
+  } catch (error){
     console.error("Add Task Error:", error.message);
     res.status(500).json({ message: "Server error. Please try again later." });
   }

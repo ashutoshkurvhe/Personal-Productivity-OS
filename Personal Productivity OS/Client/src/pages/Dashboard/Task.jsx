@@ -6,6 +6,8 @@ import Model from "../../components/common/Model";
 import DeleteModel from "../../components/common/DeleteModel";
 import DeleteAlert from "../../components/common/DeleteAlert";
 import { useUserAuth } from "../../hooks/useUserAuth";
+import axiosInstance from "../../utils/axiosInstance";
+import { API_PATHS } from "../../utils/apiPaths";
 
 // Mock data and functions for demonstration
 const mockTasks = [
@@ -51,7 +53,7 @@ const mockTasks = [
 
 const Task = () => {
   useUserAuth()
-  const [tasksData, setTasksData] = useState(mockTasks);
+  const [tasksData, setTasksData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openAddTasksModel, setOpenAddTasksModel] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
@@ -68,9 +70,15 @@ const Task = () => {
     setLoading(true);
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      const response = await axiosInstance.get(
+        `${API_PATHS.TASKS.GET_ALL_TASKS}`
+      );
       // In real app, this would be an API call
-      console.log("Tasks fetched");
+
+      if (response.data) {
+        setTasksData(response.data);
+      }
+      console.log(response);
     } catch (error) {
       console.error("Something went wrong. Please try again.", error);
     } finally {

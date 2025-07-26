@@ -3,7 +3,6 @@ import UpcomingEventsCard from "../Cards/UpcomingEventsCard";
 
 const UpcomingEvents = ({ dashboardData }) => {
   const { upcomingEvents } = dashboardData;
-  // console.log(dashboardData)
   return (
     <div className="mt-5 p-4 h-full rounded-2xl shadow-md bg-gray-00">
       <div>

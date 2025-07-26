@@ -40,7 +40,7 @@ exports.getDashboardData = async (req, res) => {
 
     // Upcoming Events (latest 5)
     const upcomingEvents = await Event.find({ userId: userObjectId })
-      .sort({ date: -1 })
+      .sort({ date: 1 })
       .limit(3);
 
     // Return final dashboard response

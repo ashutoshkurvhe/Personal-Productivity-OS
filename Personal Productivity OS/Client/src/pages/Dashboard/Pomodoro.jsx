@@ -7,7 +7,6 @@ import PomodoroTimer from "../../components/Pomodoro/PomodoroTimer";
 import PomodoroStats from "../../components/Pomodoro/PomodoroStats";
 import { CiPlay1, CiPause1 } from "react-icons/ci";
 import { MdOutlineRestartAlt } from "react-icons/md";
-import Home from "./Home";
 
 const PomodoroPage = () => {
   useUserAuth();
