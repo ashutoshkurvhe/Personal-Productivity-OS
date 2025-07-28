@@ -6,7 +6,7 @@ import NotesModel from "./NotesModel";
 import { TiPinOutline } from "react-icons/ti";
 import { IoArchiveOutline } from "react-icons/io5";
 import { AiOutlineHeart } from "react-icons/ai";
-import { FaRegNoteSticky} from "react-icons/fa6";
+import { FaRegNoteSticky, FaWandMagicSparkles } from "react-icons/fa6";
 
 
 const NoteCard = ({
@@ -89,6 +89,14 @@ const NoteCard = ({
         <div className="flex items-start justify-between mb-2">
           <h1 className="text-xl font-medium mb-4 text-wrap md:max-w-[300px]">{title}</h1>
           <div className="flex gap-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onSummarized(note._id);
+              }}
+            >
+              {<FaWandMagicSparkles />}
+            </button>
             {showBadge(type)}
             <button onClick={(e) => { e.stopPropagation(); handleOnClickThreeDots() }}>
               <BsThreeDotsVertical />

@@ -278,10 +278,7 @@ const Note = () => {
               onClose={() => setOpenCartDetails({ show: false, data: null })}
               title="Note Details"
             >
-              <NoteDetails
-                noteData={singleNoteData}
-                onSummarized={handleSummarizeNote}
-              />
+              <NoteDetails noteData={singleNoteData} />
             </Model>
           ) : (
             <NotesList
