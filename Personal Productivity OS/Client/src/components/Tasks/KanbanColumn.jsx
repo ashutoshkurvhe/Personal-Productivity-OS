@@ -6,6 +6,8 @@ import {
 } from "@dnd-kit/sortable";
 import TaskCard from "./TaskCard";
 import { Plus } from "lucide-react";
+import { CgGoogleTasks } from "react-icons/cg";
+
 
 const KanbanColumn = ({ column, tasks, onEdit, onDelete, onAddTask }) => {
   const { setNodeRef, isOver } = useDroppable({
@@ -13,17 +15,15 @@ const KanbanColumn = ({ column, tasks, onEdit, onDelete, onAddTask }) => {
   });
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-black rounded-2xl">
       {/* Column Header */}
       <div
-        className={`flex items-center justify-between p-4 rounded-t-lg  ${column.color}`}
+        className={`flex items-center justify-between p-4 rounded-t-lg shadow-2xl`}
       >
         <div className="flex items-center justify-between">
-          <h3 className={`font-semibold text-gray-600`}>
-            {column.title}
-          </h3>
+          <h3 className={`font-semibold text-gray-200`}>{column.title}</h3>
           <span
-            className={`bg-white px-2 py-1 rounded-full text-xs font-medium ${column.headerColor}`}
+            className={`bg-white px-2 py-1 ml-2 rounded-full text-xs font-medium ${column.headerColor}`}
           >
             {column.count}
           </span>
@@ -39,9 +39,9 @@ const KanbanColumn = ({ column, tasks, onEdit, onDelete, onAddTask }) => {
       {/* Tasks Container */}
       <div
         ref={setNodeRef}
-        className={`flex-1 p-4 rounded-b-lg transition-colors duration-200 ${
-          column.color
-        } ${isOver ? "bg-opacity-70" : ""}`}
+        className={`flex-1 p-4 rounded-b-lg transition-colors duration-200 bg-white shadow-lg ${
+          isOver ? "bg-opacity-70" : ""
+        }`}
       >
         <SortableContext
           items={tasks.map((task) => task._id)}
@@ -50,7 +50,7 @@ const KanbanColumn = ({ column, tasks, onEdit, onDelete, onAddTask }) => {
           <div className="space-y-3 min-h-[200px]">
             {tasks.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-32 text-gray-400">
-                <div className="text-4xl mb-2">📋</div>
+                <div className="text-4xl mb-2">{<CgGoogleTasks />}</div>
                 <p className="text-sm">No tasks yet</p>
                 <button
                   onClick={onAddTask}

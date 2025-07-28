@@ -3,9 +3,9 @@ import React from "react";
 const DeleteModel = ({ children, isOpen, onClose, title }) => {
   if (!isOpen) return null;
   return (
-    <div className="fixed top-0 right-0 z-50 flex flex-col justify-center items-center w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden bg-opacity-50 bg-gray-200/50 backdrop-blur-sm">
+    <div className="fixed top-0 right-0 z-999 flex flex-col justify-center items-center w-[100vw] h-[100vh] overflow-y-auto overflow-x-hidden bg-opacity-50 bg-gray-200/50 backdrop-blur-sm">
       {/*Model content */}
-      <div className="relative w-[100vw] min-w-[250px] max-h-[250px]">
+      <div className="relative md:w-[700px] min-w-[250px] max-h-[250px]">
         <div className="relative bg-white m-4 rounded-lg shadow-sm">
           {/*Model header */}
           <div className="flex items-center justify-between p-4 md:p-5">

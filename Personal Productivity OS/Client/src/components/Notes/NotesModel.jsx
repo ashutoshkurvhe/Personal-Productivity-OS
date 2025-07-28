@@ -26,23 +26,23 @@ const NotesModel = ({
     <div className="flex flex-col justify-between gap-5 bg-black text-white shadow-md rounded-lg p-4 mb-4 hover:shadow-lg transition-shadow duration-300 max-h-[250px] max-w-[200px] absolute top-12 right-5 z-10000">
       <button
         className="flex items-center gap-2 px-2"
-        onClick={() => { (isFavorite ? unfavorite : favorite)(); setShowNotesModel(false); }}
+        onClick={(e) => { (isFavorite ? unfavorite : favorite)(); setShowNotesModel(false); e.stopPropagation}}
       >
         <AiOutlineHeart />
         {isFavorite ? "Unfavorite" : "Favorite"}
       </button>
       <button
         className="flex items-center gap-2 px-2"
-        onClick={() => { (isPinned ? unpin : pin)(); setShowNotesModel(false) }}
+        onClick={(e) => { e.stopPropagation; (isPinned ? unpin : pin)(); setShowNotesModel(false);}}
       >
         <TiPinOutline />
         {isPinned ? "Unpin" : "Pin"}
       </button>
       <button
         className="flex items-center gap-2 px-2"
-        onClick={() => {
+        onClick={(e) => {
           (isArchived ? unarchived : archived)();
-          setShowNotesModel(false);
+          setShowNotesModel(false); e.stopPropagation;
         }}
       >
         <IoArchiveOutline />
@@ -50,14 +50,14 @@ const NotesModel = ({
       </button>
       <button
         className="flex items-center gap-2 px-2"
-        onClick={() => {onEdit(); setShowNotesModel(false) }}
+        onClick={(e) => { onEdit(); setShowNotesModel(false); e.stopPropagation; }}
       >
         <AiOutlineEdit />
         Edit
       </button>
       <button
         className="flex items-center gap-2 px-2 text-red-500"
-        onClick={() => { onDelete(); setShowNotesModel(false); }}
+        onClick={(e) => { onDelete(); setShowNotesModel(false); e.stopPropagation;}}
       >
         <MdOutlineDelete />
         Delete

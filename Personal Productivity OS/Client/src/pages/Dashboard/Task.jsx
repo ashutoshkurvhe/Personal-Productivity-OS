@@ -8,48 +8,9 @@ import DeleteAlert from "../../components/common/DeleteAlert";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
+import { toast } from "react-toastify";
 
 // Mock data and functions for demonstration
-const mockTasks = [
-  {
-    _id: "1",
-    title: "Design new landing page",
-    description:
-      "Create a modern and responsive landing page for the new product launch",
-    dueDate: "2024-01-20",
-    priority: "high",
-    taskStatus: "todo",
-    orderIndex: 0,
-  },
-  {
-    _id: "2",
-    title: "Implement user authentication",
-    description:
-      "Set up JWT-based authentication system with proper security measures",
-    dueDate: "2024-01-18",
-    priority: "high",
-    taskStatus: "in-progress",
-    orderIndex: 0,
-  },
-  {
-    _id: "3",
-    title: "Write API documentation",
-    description: "Document all REST API endpoints with examples and schemas",
-    dueDate: "2024-01-25",
-    priority: "medium",
-    taskStatus: "review",
-    orderIndex: 0,
-  },
-  {
-    _id: "4",
-    title: "Setup CI/CD pipeline",
-    description: "Configure automated testing and deployment workflows",
-    dueDate: "2024-01-15",
-    priority: "low",
-    taskStatus: "done",
-    orderIndex: 0,
-  },
-];
 
 const Task = () => {
   useUserAuth()
@@ -95,9 +56,8 @@ const Task = () => {
       return;
     }
 
-    try {
-      // Simulate API call
-      const newTask = {
+      try {
+      await axiosInstance.post(API_PATHS.TASKS.ADD_TASK, {
         _id: Date.now().toString(),
         title,
         description,
@@ -105,11 +65,12 @@ const Task = () => {
         priority,
         taskStatus,
         orderIndex,
-      };
-
-      setTasksData((prev) => [...prev, newTask]);
-      setOpenAddTasksModel(false);
-      alert("Task added successfully.");
+      });
+        
+        // setTasksData((prev) => [...prev, newTask]);
+        setOpenAddTasksModel(false);
+        toast.success("Note added successfully.");
+        fetchAllTasks();
     } catch (error) {
       console.error("Error adding task:", error);
       alert("Something went wrong while adding the task.");

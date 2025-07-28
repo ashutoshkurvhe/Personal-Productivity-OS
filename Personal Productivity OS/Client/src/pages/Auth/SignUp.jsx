@@ -79,11 +79,11 @@ const SignUp = () => {
     };
   return (
     <AuthLayout>
-      <div className="lg:w-[70%] h-auto md:h-full mt-10 md:mt-0 flex flex-col justify-center">
-        <h3 className="text-2xl lg:text-4xl font-semibold text-black">
+      <div className="lg:w-[60%] h-auto md:h-[500px] mt-10 md:mt-0 flex flex-col justify-center bg-white p-4 rounded-2xl">
+        <h3 className="text-2xl lg:text-4xl font-semibold text-black text-center">
           Create an Account
         </h3>
-        <p className="text-xs text-slate-700 mt-[5px] mb-6">
+        <p className="text-xs text-slate-700 mt-[5px] mb-6 text-center">
           Join us today by entering your details below
         </p>
 

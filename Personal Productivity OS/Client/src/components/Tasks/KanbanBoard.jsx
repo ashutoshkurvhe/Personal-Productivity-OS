@@ -155,8 +155,8 @@ const KanbanBoard = ({
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center space-x-4">
           <h2 className="text-xl font-semibold text-gray-800">Task Board</h2>
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <span className="flex gap-2 bg-gray-100 px-2 py-1 rounded-full">
+          <div className="flex items-center space-x-2 text-sm text-gray-200">
+            <span className="flex gap-2 bg-black px-2 py-1 rounded-full">
               {tasks.length} <span className="hidden md:flex">Total Tasks</span>
             </span>
           </div>
@@ -171,7 +171,7 @@ const KanbanBoard = ({
       </div>
 
       {/* Kanban Board */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden py-5">
         <DndContext
           sensors={sensors}
           onDragStart={handleDragStart}

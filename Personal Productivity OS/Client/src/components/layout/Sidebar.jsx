@@ -33,7 +33,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-64 h-[92vh] bg-red-400/50 text-white border-r border-gray-200/50 p-5 sticky top-[61px] left-0 z-90">
+    <div className="w-64 h-[100vh] bg-black text-white border-r border-gray-200/50 p-5 sticky top-[61px] left-0 z-90">
       {SIDE_MENU_DATA.map((item, index) => (
         <button
           key={`menu_${index}`}

@@ -27,7 +27,7 @@ function App() {
   }, []);
   return (
     <UserProvider>
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="bottom-center" autoClose={3000} />
       <div>
         <Router>
           <Routes>
