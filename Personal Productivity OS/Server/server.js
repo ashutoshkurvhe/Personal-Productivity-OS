@@ -32,14 +32,14 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-app.use("/api/v2/auth", authRoutes);
-app.use("/api/v2/task", taskRoutes);
-app.use("/api/v2/note", noteRoutes);
-app.use("/api/v2/project", projectRoutes);
-app.use("/api/v2/event", eventRoutes);
-app.use("/api/v2/notify", notificationRoutes);
-app.use("/api/v2/pomodoro", pomodoroRoutes);
-app.use("/api/v2/dashboard", dashboardRoutes);
+app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/task", taskRoutes);
+app.use("/api/v1/note", noteRoutes);
+app.use("/api/v1/project", projectRoutes);
+app.use("/api/v1/event", eventRoutes);
+app.use("/api/v1/notify", notificationRoutes);
+app.use("/api/v1/pomodoro", pomodoroRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
 
 //Serve upload folder
 app.use("/uploads",express.static(path.join(__dirname, "uploads")))
