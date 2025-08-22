@@ -66,7 +66,7 @@ Other: Web Push, iCal, AI-powered APIs
 
 Clone the repository:
 
-git clone https://github.com/your-username/productivity-os.git
+git clone https://github.com/ashutoshkurvhe/Personal-Productivity-OS.git
 cd productivity-os
 
 Backend Setup
@@ -79,16 +79,6 @@ cd frontend
 npm install
 npm start
 
-🔑 Environment Variables
-
-Create a .env file inside the backend folder with:
-
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-EMAIL_SERVICE_API=your_email_service_api_key
-PUSH_NOTIFICATION_KEY=your_push_key
-AI_API_KEY=your_ai_api_key
 
 📦 Available Scripts
 Backend
@@ -99,7 +89,7 @@ npm start → Run backend in production
 
 Frontend
 
-npm start → Start React frontend
+npm run dev → Start React frontend
 
 npm run build → Build frontend for production
 
@@ -108,8 +98,5 @@ npm run build → Build frontend for production
 Contributions, ideas, and feedback are welcome!
 Feel free to fork this repo and submit a pull request.
 
-📜 License
-
-This project is licensed under the MIT License.
 
 ✨ Built with ❤️ using the MERN Stack to make productivity simpler & smarter.
