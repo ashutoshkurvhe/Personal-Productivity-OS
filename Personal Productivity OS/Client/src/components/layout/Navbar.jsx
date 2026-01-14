@@ -4,6 +4,9 @@ import { CiDark, CiLight } from "react-icons/ci";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { HiOutlineX } from "react-icons/hi";
 import { FaBarsStaggered } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import logo from "../../assets/11.png";
+
 
 import Sidebar from "../layout/Sidebar";
 import CharAvatar from "../Cards/CharAvatar";
@@ -14,7 +17,7 @@ const Navbar = ({ activeMenu }) => {
   const { user } = useContext(UserContext);
 
   return (
-    <div className="w-[100vw] flex items-center justify-between gap-5 border border-gray-200 backdrop-blur-[8px] py-2 px-4 sticky top-0 left-0 z-30">
+    <div className="w-[100vw] flex items-center justify-between gap-5 border border-gray-200 backdrop-blur-[8px] py-2 px-10 sticky top-0 left-0 z-30 bg-black/95">
       <div className="flex gap-5 items-center">
         <button
           className="block lg:hidden text-black"
@@ -26,9 +29,9 @@ const Navbar = ({ activeMenu }) => {
             <FaBarsStaggered className="text-2xl" />
           )}
         </button>
-        <p className="text-lg font-medium hidden md:flex">
-          Personal Productivity OS
-        </p>
+        <Link to="/" className="text-2xl text-white font-medium bg-transparent">
+          <img src={logo} alt="" className="w-20 h-15" />
+        </Link>
       </div>
 
       <div className="flex items-center gap-3">
